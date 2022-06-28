@@ -8,10 +8,14 @@ if [[ -z "$PLATFORM" ]]; then
 fi
 
 export BUILD_TEST=0
+export CUDACXX="/usr/local/cuda/bin/nvcc"
+export CUDA_HOME="/usr/local/cuda"
+export CUDNN_HOME="/usr/local/cuda"
 export MAX_JOBS=$MAKEJ
 export USE_CUDA=0
 export USE_NUMPY=0
 export USE_OPENMP=1
+export USE_SYSTEM_NCCL=1
 if [[ "$EXTENSION" == *gpu ]]; then
     export USE_CUDA=1
     export USE_FAST_NVCC=0
@@ -19,7 +23,7 @@ if [[ "$EXTENSION" == *gpu ]]; then
     export TORCH_CUDA_ARCH_LIST="3.5+PTX"
 fi
 
-PYTORCH_VERSION=1.9.1
+PYTORCH_VERSION=1.11.0
 
 mkdir -p "$PLATFORM$EXTENSION"
 cd "$PLATFORM$EXTENSION"
@@ -33,6 +37,9 @@ git reset --hard
 git checkout v$PYTORCH_VERSION
 git submodule update --init --recursive
 git submodule foreach --recursive 'git reset --hard'
+
+# https://github.com/pytorch/pytorch/pull/66219
+#patch -Np1 < ../../../pytorch.patch
 
 CPYTHON_PATH="$INSTALL_PATH/../../../cpython/cppbuild/$PLATFORM/"
 OPENBLAS_PATH="$INSTALL_PATH/../../../openblas/cppbuild/$PLATFORM/"
@@ -82,7 +89,7 @@ mkdir -p "$PYTHON_INSTALL_PATH"
 
 export CFLAGS="-I$CPYTHON_PATH/include/ -I$PYTHON_LIB_PATH/include/python/ -L$CPYTHON_PATH/lib/ -L$CPYTHON_PATH/libs/"
 export PYTHONNOUSERSITE=1
-$PYTHON_BIN_PATH -m pip install --target=$PYTHON_LIB_PATH setuptools pyyaml typing_extensions
+$PYTHON_BIN_PATH -m pip install --target=$PYTHON_LIB_PATH setuptools==59.1.0 pyyaml==6.0 typing_extensions==4.0.0
 
 case $PLATFORM in
     linux-x86)
@@ -94,16 +101,24 @@ case $PLATFORM in
         export CXX="g++ -m64"
         ;;
     macosx-*)
-        ln -sf pytorch/torch/lib ../lib
-        cp /usr/local/lib/libomp.dylib ../lib/libiomp5.dylib
-        chmod +w ../lib/libiomp5.dylib
-        install_name_tool -id @rpath/libiomp5.dylib ../lib/libiomp5.dylib
-        export CC="clang -L$INSTALL_PATH/lib -Wl,-rpath,$INSTALL_PATH/lib -liomp5 -Wno-unused-command-line-argument"
-        export CXX="clang++ -L$INSTALL_PATH/lib -Wl,-rpath,$INSTALL_PATH/lib -liomp5 -Wno-unused-command-line-argument"
+        export CC="clang"
+        export CXX="clang++"
         ;;
     windows-x86_64)
-        export CC="cl.exe"
-        export CXX="cl.exe"
+        if which ccache.exe; then
+            export CC="ccache.exe cl.exe"
+            export CXX="ccache.exe cl.exe"
+#            export CUDAHOSTCC="cl.exe"
+#            export CUDAHOSTCXX="cl.exe"
+        else
+            export CC="cl.exe"
+            export CXX="cl.exe"
+        fi
+        if [[ -n "${CUDA_PATH:-}" ]]; then
+            export CUDACXX="$CUDA_PATH/bin/nvcc"
+            export CUDA_HOME="$CUDA_PATH"
+            export CUDNN_HOME="$CUDA_PATH"
+        fi
         export CFLAGS="-I$CPYTHON_PATH/include/ -I$PYTHON_LIB_PATH/include/python/"
         ;;
     *)
@@ -112,8 +127,12 @@ case $PLATFORM in
         ;;
 esac
 
+# work around issues with the build system
+sedinplace '/Werror/d' CMakeLists.txt third_party/fbgemm/CMakeLists.txt third_party/fmt/CMakeLists.txt
 sedinplace 's/build_python=True/build_python=False/g' setup.py
 sedinplace 's/    build_deps()/    build_deps(); sys.exit()/g' setup.py
+sedinplace 's/AND NOT DEFINED ENV{CUDAHOSTCXX}//g' cmake/public/cuda.cmake
+sedinplace 's/CMAKE_CUDA_FLAGS "/CMAKE_CUDA_FLAGS " --use-local-env /g' CMakeLists.txt
 
 # work around some compiler bugs
 sedinplace 's/!defined(__INTEL_COMPILER))/!defined(__INTEL_COMPILER) \&\& (__GNUC__ < 11))/g' third_party/XNNPACK/src/xnnpack/intrinsics-polyfill.h
@@ -135,9 +154,7 @@ sedinplace "s/BUILD_DIR = 'build'/BUILD_DIR = os.environ['BUILD_DIR'] if 'BUILD_
 sedinplace "s/var.startswith(('BUILD_', 'USE_', 'CMAKE_'))/var.startswith(('BUILD_', 'USE_', 'CMAKE_', 'CUDA_'))/g" tools/setup_helpers/cmake.py
 
 # allow resizing std::vector<at::indexing::TensorIndex>
-sedinplace '/TensorIndex(c10::nullopt_t)/i\
-  TensorIndex() : TensorIndex(c10::nullopt) {}\
-' aten/src/ATen/TensorIndexing.h
+sedinplace 's/TensorIndex(c10::nullopt_t)/TensorIndex(c10::nullopt_t none = None)/g' aten/src/ATen/TensorIndexing.h
 
 # add missing declarations
 sedinplace '/^};/a\
@@ -150,5 +167,15 @@ rm -Rf ../lib
 ln -sf pytorch/torch/include ../include
 ln -sf pytorch/torch/lib ../lib
 ln -sf pytorch/torch/bin ../bin
+
+# fix library with correct rpath on Mac
+case $PLATFORM in
+    macosx-*)
+        cp /usr/local/lib/libomp.dylib ../lib/libiomp5.dylib
+        chmod +w ../lib/libiomp5.dylib
+        install_name_tool -id @rpath/libiomp5.dylib ../lib/libiomp5.dylib
+        install_name_tool -change @rpath/libomp.dylib @rpath/libiomp5.dylib ../lib/libtorch_cpu.dylib
+        ;;
+esac
 
 cd ../..

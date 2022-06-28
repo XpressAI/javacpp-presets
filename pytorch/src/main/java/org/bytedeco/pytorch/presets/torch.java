@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2021 Samuel Audet, Eduardo Gonzalez
+ * Copyright (C) 2020-2022 Samuel Audet, Eduardo Gonzalez
  *
  * Licensed either under the Apache License, Version 2.0, or (at your option)
  * under the terms of the GNU General Public License as published by
@@ -66,6 +66,7 @@ import org.bytedeco.openblas.presets.openblas;
 //                "c10/util/TypeIndex.h",
 //                "c10/util/TypeTraits.h",
 //                "c10/util/TypeList.h",
+//                "c10/util/TypeSafeSignMath.h",
 //                "c10/util/Metaprogramming.h",
 //                "c10/util/Optional.h",
 //                "c10/util/UniqueVoidPtr.h",
@@ -91,6 +92,7 @@ import org.bytedeco.openblas.presets.openblas;
                 "c10/util/qint8.h",
                 "c10/util/quint8.h",
                 "c10/util/BFloat16.h",
+                "c10/util/quint2x4.h",
                 "c10/util/quint4x2.h",
                 "c10/util/ThreadLocalDebugInfo.h",
                 "c10/util/Type.h",
@@ -131,6 +133,8 @@ import org.bytedeco.openblas.presets.openblas;
 //                "caffe2/serialize/versions.h",
 //                "caffe2/serialize/inline_container.h",
 //                "ATen/core/op_registration/hacky_wrapper_for_legacy_signatures.h"
+//                "ATen/core/custom_class.h",
+                "ATen/core/symbol.h",
                 "ATen/core/aten_interned_strings.h",
                 "ATen/core/interned_strings.h",
                 "ATen/core/grad_mode.h",
@@ -138,21 +142,28 @@ import org.bytedeco.openblas.presets.openblas;
                 "ATen/core/Dimname.h",
                 "ATen/core/DimVector.h",
                 "ATen/core/Generator.h",
+//                "ATen/core/CheckMemoryFormat.h",
 //                "ATen/core/DeprecatedTypeProperties.h",
 //                "ATen/core/DeprecatedTypePropertiesRegistry.h",
 //                "ATen/core/LegacyTypeDispatch.h",
 //                "ATen/core/QuantizerBase.h",
+//                "ATen/core/Dict.h",
                 "ATen/core/List.h",
                 "ATen/core/NamedTensor.h",
                 "ATen/core/Reduction.h",
                 "ATen/core/Scalar.h",
                 "ATen/core/TensorAccessor.h",
+                "ATen/core/TensorBase.h",
                 "ATen/core/TensorBody.h",
                 "ATen/core/Tensor.h",
                 "ATen/core/Formatting.h",
                 "ATen/core/UnsafeFromTH.h",
                 "ATen/core/Variadic.h",
                 "ATen/core/blob.h",
+                "ATen/core/class_type.h",
+//                "ATen/core/dynamic_type.h",
+                "ATen/core/enum_type.h",
+                "ATen/core/type_ptr.h",
                 "ATen/core/functional.h",
                 "ATen/core/ivalue.h",
                 "ATen/core/ivalue_to.h",
@@ -179,6 +190,8 @@ import org.bytedeco.openblas.presets.openblas;
 //                "ATen/detail/CUDAHooksInterface.h",
 //                "ATen/detail/HIPHooksInterface.h",
 //                "ATen/CPUGeneratorImpl.h",
+//                "ATen/FuncTorchTLS.h",
+//                "ATen/MethodOperators.h",
                 "ATen/record_function.h",
                 "ATen/ThreadLocalState.h",
                 "ATen/ATen.h",
@@ -187,6 +200,8 @@ import org.bytedeco.openblas.presets.openblas;
                 "ATen/DeviceGuard.h",
                 "ATen/DimVector.h",
                 "ATen/Dispatch.h",
+                "ATen/EmptyTensor.h",
+                "ATen/LinalgBackend.h",
                 "ATen/Formatting.h",
                 "ATen/Generator.h",
                 "ATen/Parallel.h",
@@ -208,15 +223,1098 @@ import org.bytedeco.openblas.presets.openblas;
                 "ATen/TensorOperators.h",
                 "ATen/Version.h",
 
+                "ATen/ops/from_blob.h",
+                "ATen/ops/tensor.h",
+                "ATen/ops/_adaptive_avg_pool2d.h",
+                "ATen/ops/_adaptive_avg_pool2d_backward.h",
+                "ATen/ops/_adaptive_avg_pool3d.h",
+                "ATen/ops/_adaptive_avg_pool3d_backward.h",
+                "ATen/ops/_add_batch_dim.h",
+                "ATen/ops/_add_relu.h",
+                "ATen/ops/_aminmax.h",
+                "ATen/ops/_amp_foreach_non_finite_check_and_unscale.h",
+                "ATen/ops/_amp_update_scale.h",
+                "ATen/ops/_assert_async.h",
+                "ATen/ops/_autocast_to_full_precision.h",
+                "ATen/ops/_autocast_to_reduced_precision.h",
+                "ATen/ops/_backward.h",
+                "ATen/ops/_batch_norm_impl_index.h",
+                "ATen/ops/_batch_norm_impl_index_backward.h",
+                "ATen/ops/_cast_Byte.h",
+                "ATen/ops/_cast_Char.h",
+                "ATen/ops/_cast_Double.h",
+                "ATen/ops/_cast_Float.h",
+                "ATen/ops/_cast_Half.h",
+                "ATen/ops/_cast_Int.h",
+                "ATen/ops/_cast_Long.h",
+                "ATen/ops/_cast_Short.h",
+                "ATen/ops/_cat.h",
+                "ATen/ops/_cdist_backward.h",
+                "ATen/ops/_cdist_forward.h",
+                "ATen/ops/_cholesky_solve_helper.h",
+                "ATen/ops/_choose_qparams_per_tensor.h",
+                "ATen/ops/_coalesce.h",
+                "ATen/ops/_coalesced.h",
+                "ATen/ops/_compute_linear_combination.h",
+                "ATen/ops/_conj.h",
+                "ATen/ops/_conj_physical.h",
+                "ATen/ops/_conv_depthwise2d.h",
+                "ATen/ops/_convert_indices_from_coo_to_csr.h",
+                "ATen/ops/_convert_indices_from_csr_to_coo.h",
+                "ATen/ops/_convolution.h",
+                "ATen/ops/_convolution_double_backward.h",
+                "ATen/ops/_convolution_mode.h",
+                "ATen/ops/_copy_from.h",
+                "ATen/ops/_copy_from_and_resize.h",
+                "ATen/ops/_ctc_loss.h",
+                "ATen/ops/_ctc_loss_backward.h",
+                "ATen/ops/_cudnn_ctc_loss.h",
+                "ATen/ops/_cudnn_init_dropout_state.h",
+                "ATen/ops/_cudnn_rnn.h",
+                "ATen/ops/_cudnn_rnn_backward.h",
+                "ATen/ops/_cudnn_rnn_flatten_weight.h",
+                "ATen/ops/_cufft_clear_plan_cache.h",
+                "ATen/ops/_cufft_get_plan_cache_max_size.h",
+                "ATen/ops/_cufft_get_plan_cache_size.h",
+                "ATen/ops/_cufft_set_plan_cache_max_size.h",
+                "ATen/ops/_cummax_helper.h",
+                "ATen/ops/_cummin_helper.h",
+                "ATen/ops/_debug_has_internal_overlap.h",
+                "ATen/ops/_det_lu_based_helper.h",
+                "ATen/ops/_det_lu_based_helper_backward_helper.h",
+                "ATen/ops/_dimI.h",
+                "ATen/ops/_dimV.h",
+                "ATen/ops/_dim_arange.h",
+                "ATen/ops/_dirichlet_grad.h",
+                "ATen/ops/_efficientzerotensor.h",
+                "ATen/ops/_embedding_bag.h",
+                "ATen/ops/_embedding_bag_backward.h",
+                "ATen/ops/_embedding_bag_dense_backward.h",
+                "ATen/ops/_embedding_bag_forward_only.h",
+                "ATen/ops/_embedding_bag_per_sample_weights_backward.h",
+                "ATen/ops/_embedding_bag_sparse_backward.h",
+                "ATen/ops/_empty_affine_quantized.h",
+                "ATen/ops/_empty_per_channel_affine_quantized.h",
+                "ATen/ops/_euclidean_dist.h",
+                "ATen/ops/_fake_quantize_learnable_per_channel_affine.h",
+                "ATen/ops/_fake_quantize_learnable_per_channel_affine_backward.h",
+                "ATen/ops/_fake_quantize_learnable_per_tensor_affine.h",
+                "ATen/ops/_fake_quantize_learnable_per_tensor_affine_backward.h",
+                "ATen/ops/_fake_quantize_per_tensor_affine_cachemask_tensor_qparams.h",
+                "ATen/ops/_fft_c2c.h",
+                "ATen/ops/_fft_c2r.h",
+                "ATen/ops/_fft_r2c.h",
+                "ATen/ops/_foreach_abs.h",
+                "ATen/ops/_foreach_acos.h",
+                "ATen/ops/_foreach_add.h",
+                "ATen/ops/_foreach_addcdiv.h",
+                "ATen/ops/_foreach_addcmul.h",
+                "ATen/ops/_foreach_asin.h",
+                "ATen/ops/_foreach_atan.h",
+                "ATen/ops/_foreach_ceil.h",
+                "ATen/ops/_foreach_cos.h",
+                "ATen/ops/_foreach_cosh.h",
+                "ATen/ops/_foreach_div.h",
+                "ATen/ops/_foreach_erf.h",
+                "ATen/ops/_foreach_erfc.h",
+                "ATen/ops/_foreach_exp.h",
+                "ATen/ops/_foreach_expm1.h",
+                "ATen/ops/_foreach_floor.h",
+                "ATen/ops/_foreach_frac.h",
+                "ATen/ops/_foreach_lgamma.h",
+                "ATen/ops/_foreach_log.h",
+                "ATen/ops/_foreach_log10.h",
+                "ATen/ops/_foreach_log1p.h",
+                "ATen/ops/_foreach_log2.h",
+                "ATen/ops/_foreach_maximum.h",
+                "ATen/ops/_foreach_minimum.h",
+                "ATen/ops/_foreach_mul.h",
+                "ATen/ops/_foreach_neg.h",
+                "ATen/ops/_foreach_norm.h",
+                "ATen/ops/_foreach_reciprocal.h",
+                "ATen/ops/_foreach_round.h",
+                "ATen/ops/_foreach_sigmoid.h",
+                "ATen/ops/_foreach_sin.h",
+                "ATen/ops/_foreach_sinh.h",
+                "ATen/ops/_foreach_sqrt.h",
+                "ATen/ops/_foreach_sub.h",
+                "ATen/ops/_foreach_tan.h",
+                "ATen/ops/_foreach_tanh.h",
+                "ATen/ops/_foreach_trunc.h",
+                "ATen/ops/_foreach_zero.h",
+                "ATen/ops/_fused_dropout.h",
+                "ATen/ops/_fused_moving_avg_obs_fq_helper.h",
+                "ATen/ops/_fw_primal.h",
+                "ATen/ops/_gather_sparse_backward.h",
+                "ATen/ops/_grid_sampler_2d_cpu_fallback.h",
+                "ATen/ops/_grid_sampler_2d_cpu_fallback_backward.h",
+                "ATen/ops/_has_compatible_shallow_copy_type.h",
+                "ATen/ops/_has_same_storage_numel.h",
+                "ATen/ops/_histogramdd_bin_edges.h",
+                "ATen/ops/_histogramdd_from_bin_cts.h",
+                "ATen/ops/_histogramdd_from_bin_tensors.h",
+                "ATen/ops/_index_copy.h",
+                "ATen/ops/_index_put_impl.h",
+                "ATen/ops/_indices.h",
+                "ATen/ops/_is_zerotensor.h",
+                "ATen/ops/_linalg_check_errors.h",
+                "ATen/ops/_linalg_inv_out_helper.h",
+                "ATen/ops/_linalg_qr_helper.h",
+                "ATen/ops/_linalg_svd.h",
+                "ATen/ops/_local_scalar_dense.h",
+                "ATen/ops/_log_softmax.h",
+                "ATen/ops/_log_softmax_backward_data.h",
+                "ATen/ops/_logcumsumexp.h",
+                "ATen/ops/_lu_with_info.h",
+                "ATen/ops/_make_dual.h",
+                "ATen/ops/_make_per_channel_quantized_tensor.h",
+                "ATen/ops/_make_per_tensor_quantized_tensor.h",
+                "ATen/ops/_masked_scale.h",
+                "ATen/ops/_masked_softmax.h",
+                "ATen/ops/_mkldnn_reshape.h",
+                "ATen/ops/_mkldnn_transpose.h",
+                "ATen/ops/_native_multi_head_self_attention.h",
+                "ATen/ops/_neg_view.h",
+                "ATen/ops/_new_zeros_with_same_feature_meta.h",
+//                "ATen/ops/_nnpack_available.h",
+                "ATen/ops/_nnpack_spatial_convolution.h",
+                "ATen/ops/_nnz.h",
+                "ATen/ops/_pack_padded_sequence.h",
+                "ATen/ops/_pack_padded_sequence_backward.h",
+                "ATen/ops/_pad_packed_sequence.h",
+                "ATen/ops/_pdist_backward.h",
+                "ATen/ops/_pdist_forward.h",
+                "ATen/ops/_pin_memory.h",
+                "ATen/ops/_remove_batch_dim.h",
+                "ATen/ops/_reshape_alias.h",
+                "ATen/ops/_reshape_from_tensor.h",
+                "ATen/ops/_rowwise_prune.h",
+                "ATen/ops/_s_where.h",
+                "ATen/ops/_sample_dirichlet.h",
+                "ATen/ops/_saturate_weight_to_fp16.h",
+                "ATen/ops/_segment_reduce_backward.h",
+                "ATen/ops/_shape_as_tensor.h",
+                "ATen/ops/_slow_conv2d_backward.h",
+                "ATen/ops/_slow_conv2d_forward.h",
+                "ATen/ops/_sobol_engine_draw.h",
+                "ATen/ops/_sobol_engine_ff.h",
+                "ATen/ops/_sobol_engine_initialize_state.h",
+                "ATen/ops/_sobol_engine_scramble.h",
+                "ATen/ops/_softmax.h",
+                "ATen/ops/_softmax_backward_data.h",
+                "ATen/ops/_solve_helper.h",
+                "ATen/ops/_sparse_addmm.h",
+                "ATen/ops/_sparse_broadcast_to.h",
+                "ATen/ops/_sparse_coo_tensor_unsafe.h",
+                "ATen/ops/_sparse_coo_tensor_with_dims.h",
+                "ATen/ops/_sparse_coo_tensor_with_dims_and_tensors.h",
+                "ATen/ops/_sparse_csr_tensor_unsafe.h",
+                "ATen/ops/_sparse_log_softmax.h",
+                "ATen/ops/_sparse_log_softmax_backward_data.h",
+                "ATen/ops/_sparse_mask_helper.h",
+                "ATen/ops/_sparse_mm.h",
+                "ATen/ops/_sparse_softmax.h",
+                "ATen/ops/_sparse_softmax_backward_data.h",
+                "ATen/ops/_sparse_sparse_matmul.h",
+                "ATen/ops/_sparse_sum.h",
+                "ATen/ops/_sparse_sum_backward.h",
+                "ATen/ops/_stack.h",
+                "ATen/ops/_standard_gamma.h",
+                "ATen/ops/_standard_gamma_grad.h",
+                "ATen/ops/_symeig_helper.h",
+                "ATen/ops/_test_ambiguous_defaults.h",
+                "ATen/ops/_test_optional_filled_intlist.h",
+                "ATen/ops/_test_optional_floatlist.h",
+                "ATen/ops/_test_optional_intlist.h",
+                "ATen/ops/_test_serialization_subcmul.h",
+                "ATen/ops/_test_string_default.h",
+                "ATen/ops/_test_warn_in_autograd.h",
+                "ATen/ops/_thnn_differentiable_gru_cell_backward.h",
+                "ATen/ops/_thnn_differentiable_lstm_cell_backward.h",
+                "ATen/ops/_thnn_fused_gru_cell.h",
+                "ATen/ops/_thnn_fused_gru_cell_backward.h",
+                "ATen/ops/_thnn_fused_lstm_cell.h",
+                "ATen/ops/_thnn_fused_lstm_cell_backward.h",
+                "ATen/ops/_to_copy.h",
+                "ATen/ops/_to_cpu.h",
+                "ATen/ops/_torch_cuda_cu_linker_symbol_op.h",
+                "ATen/ops/_trilinear.h",
+                "ATen/ops/_unique.h",
+                "ATen/ops/_unique2.h",
+                "ATen/ops/_unpack_dual.h",
+                "ATen/ops/_unsafe_view.h",
+                "ATen/ops/_upsample_bicubic2d_aa.h",
+                "ATen/ops/_upsample_bicubic2d_aa_backward.h",
+                "ATen/ops/_upsample_bilinear2d_aa.h",
+                "ATen/ops/_upsample_bilinear2d_aa_backward.h",
+                "ATen/ops/_upsample_nearest_exact1d.h",
+                "ATen/ops/_upsample_nearest_exact1d_backward.h",
+                "ATen/ops/_upsample_nearest_exact2d.h",
+                "ATen/ops/_upsample_nearest_exact2d_backward.h",
+                "ATen/ops/_upsample_nearest_exact3d.h",
+                "ATen/ops/_upsample_nearest_exact3d_backward.h",
+                "ATen/ops/_use_cudnn_ctc_loss.h",
+//                "ATen/ops/_use_cudnn_rnn_flatten_weight.h",
+                "ATen/ops/_validate_sparse_coo_tensor_args.h",
+                "ATen/ops/_validate_sparse_csr_tensor_args.h",
+                "ATen/ops/_values.h",
+                "ATen/ops/_version.h",
+                "ATen/ops/_weight_norm.h",
+                "ATen/ops/_weight_norm_cuda_interface.h",
+                "ATen/ops/_weight_norm_cuda_interface_backward.h",
+                "ATen/ops/_weight_norm_differentiable_backward.h",
+                "ATen/ops/abs.h",
+                "ATen/ops/absolute.h",
+                "ATen/ops/acos.h",
+                "ATen/ops/acosh.h",
+                "ATen/ops/adaptive_avg_pool1d.h",
+                "ATen/ops/adaptive_avg_pool2d.h",
+                "ATen/ops/adaptive_avg_pool3d.h",
+                "ATen/ops/adaptive_avg_pool3d_backward.h",
+                "ATen/ops/adaptive_max_pool1d.h",
+                "ATen/ops/adaptive_max_pool2d.h",
+                "ATen/ops/adaptive_max_pool2d_backward.h",
+                "ATen/ops/adaptive_max_pool3d.h",
+                "ATen/ops/adaptive_max_pool3d_backward.h",
+                "ATen/ops/add.h",
+                "ATen/ops/addbmm.h",
+                "ATen/ops/addcdiv.h",
+                "ATen/ops/addcmul.h",
+                "ATen/ops/addmm.h",
+                "ATen/ops/addmv.h",
+                "ATen/ops/addr.h",
+                "ATen/ops/adjoint.h",
+                "ATen/ops/affine_grid_generator.h",
+                "ATen/ops/affine_grid_generator_backward.h",
+                "ATen/ops/alias.h",
+                "ATen/ops/align_as.h",
+                "ATen/ops/align_tensors.h",
+                "ATen/ops/align_to.h",
+                "ATen/ops/all.h",
+                "ATen/ops/allclose.h",
+                "ATen/ops/alpha_dropout.h",
+                "ATen/ops/amax.h",
+                "ATen/ops/amin.h",
+                "ATen/ops/aminmax.h",
+                "ATen/ops/and.h",
+                "ATen/ops/angle.h",
+                "ATen/ops/any.h",
+                "ATen/ops/arange.h",
+                "ATen/ops/arccos.h",
+                "ATen/ops/arccosh.h",
+                "ATen/ops/arcsin.h",
+                "ATen/ops/arcsinh.h",
+                "ATen/ops/arctan.h",
+                "ATen/ops/arctan2.h",
+                "ATen/ops/arctanh.h",
+                "ATen/ops/argmax.h",
+                "ATen/ops/argmin.h",
+                "ATen/ops/argsort.h",
+                "ATen/ops/argwhere.h",
+                "ATen/ops/as_strided.h",
+                "ATen/ops/asin.h",
+                "ATen/ops/asinh.h",
+                "ATen/ops/atan.h",
+                "ATen/ops/atan2.h",
+                "ATen/ops/atanh.h",
+                "ATen/ops/atleast_1d.h",
+                "ATen/ops/atleast_2d.h",
+                "ATen/ops/atleast_3d.h",
+                "ATen/ops/avg_pool1d.h",
+                "ATen/ops/avg_pool2d.h",
+                "ATen/ops/avg_pool2d_backward.h",
+                "ATen/ops/avg_pool3d.h",
+                "ATen/ops/avg_pool3d_backward.h",
+                "ATen/ops/baddbmm.h",
+                "ATen/ops/bartlett_window.h",
+                "ATen/ops/batch_norm.h",
+                "ATen/ops/batch_norm_backward_elemt.h",
+                "ATen/ops/batch_norm_backward_reduce.h",
+                "ATen/ops/batch_norm_elemt.h",
+                "ATen/ops/batch_norm_gather_stats.h",
+                "ATen/ops/batch_norm_gather_stats_with_counts.h",
+                "ATen/ops/batch_norm_stats.h",
+                "ATen/ops/batch_norm_update_stats.h",
+                "ATen/ops/bernoulli.h",
+                "ATen/ops/bilinear.h",
+                "ATen/ops/binary_cross_entropy.h",
+                "ATen/ops/binary_cross_entropy_backward.h",
+                "ATen/ops/binary_cross_entropy_with_logits.h",
+                "ATen/ops/binary_cross_entropy_with_logits_backward.h",
+                "ATen/ops/bincount.h",
+                "ATen/ops/binomial.h",
+                "ATen/ops/bitwise_and.h",
+                "ATen/ops/bitwise_left_shift.h",
+                "ATen/ops/bitwise_not.h",
+                "ATen/ops/bitwise_or.h",
+                "ATen/ops/bitwise_right_shift.h",
+                "ATen/ops/bitwise_xor.h",
+                "ATen/ops/blackman_window.h",
+                "ATen/ops/block_diag.h",
+                "ATen/ops/bmm.h",
+                "ATen/ops/broadcast_tensors.h",
+                "ATen/ops/broadcast_to.h",
+                "ATen/ops/bucketize.h",
+                "ATen/ops/can_cast.h",
+                "ATen/ops/cartesian_prod.h",
+                "ATen/ops/cat.h",
+                "ATen/ops/cauchy.h",
+                "ATen/ops/cdist.h",
+                "ATen/ops/ceil.h",
+                "ATen/ops/celu.h",
+                "ATen/ops/chain_matmul.h",
+                "ATen/ops/channel_shuffle.h",
+                "ATen/ops/cholesky.h",
+                "ATen/ops/cholesky_inverse.h",
+                "ATen/ops/cholesky_solve.h",
+                "ATen/ops/choose_qparams_optimized.h",
+                "ATen/ops/chunk.h",
+                "ATen/ops/clamp.h",
+                "ATen/ops/clamp_max.h",
+                "ATen/ops/clamp_min.h",
+                "ATen/ops/clip.h",
+                "ATen/ops/clone.h",
+                "ATen/ops/coalesce.h",
+                "ATen/ops/col2im.h",
+                "ATen/ops/col2im_backward.h",
+                "ATen/ops/col_indices.h",
+                "ATen/ops/column_stack.h",
+                "ATen/ops/combinations.h",
+                "ATen/ops/complex.h",
+                "ATen/ops/concat.h",
+                "ATen/ops/conj.h",
+                "ATen/ops/conj_physical.h",
+                "ATen/ops/constant_pad_nd.h",
+                "ATen/ops/contiguous.h",
+                "ATen/ops/conv1d.h",
+                "ATen/ops/conv2d.h",
+                "ATen/ops/conv3d.h",
+                "ATen/ops/conv_depthwise3d.h",
+                "ATen/ops/conv_tbc.h",
+                "ATen/ops/conv_tbc_backward.h",
+                "ATen/ops/conv_transpose1d.h",
+                "ATen/ops/conv_transpose2d.h",
+                "ATen/ops/conv_transpose3d.h",
+                "ATen/ops/convolution.h",
+                "ATen/ops/convolution_backward.h",
+                "ATen/ops/convolution_backward_overrideable.h",
+                "ATen/ops/convolution_overrideable.h",
+                "ATen/ops/copy.h",
+                "ATen/ops/copy_sparse_to_sparse.h",
+                "ATen/ops/copysign.h",
+                "ATen/ops/corrcoef.h",
+                "ATen/ops/cos.h",
+                "ATen/ops/cosh.h",
+                "ATen/ops/cosine_embedding_loss.h",
+                "ATen/ops/cosine_similarity.h",
+                "ATen/ops/count_nonzero.h",
+                "ATen/ops/cov.h",
+                "ATen/ops/cross.h",
+                "ATen/ops/cross_entropy_loss.h",
+                "ATen/ops/crow_indices.h",
+                "ATen/ops/ctc_loss.h",
+                "ATen/ops/cudnn_affine_grid_generator.h",
+                "ATen/ops/cudnn_affine_grid_generator_backward.h",
+                "ATen/ops/cudnn_batch_norm.h",
+                "ATen/ops/cudnn_batch_norm_backward.h",
+                "ATen/ops/cudnn_convolution.h",
+                "ATen/ops/cudnn_convolution_add_relu.h",
+                "ATen/ops/cudnn_convolution_relu.h",
+                "ATen/ops/cudnn_convolution_transpose.h",
+                "ATen/ops/cudnn_grid_sampler.h",
+                "ATen/ops/cudnn_grid_sampler_backward.h",
+                "ATen/ops/cudnn_is_acceptable.h",
+                "ATen/ops/cummax.h",
+                "ATen/ops/cummaxmin_backward.h",
+                "ATen/ops/cummin.h",
+                "ATen/ops/cumprod.h",
+                "ATen/ops/cumprod_backward.h",
+                "ATen/ops/cumsum.h",
+                "ATen/ops/cumulative_trapezoid.h",
+                "ATen/ops/data.h",
+                "ATen/ops/deg2rad.h",
+                "ATen/ops/dense_dim.h",
+                "ATen/ops/dequantize.h",
+                "ATen/ops/det.h",
+                "ATen/ops/detach.h",
+                "ATen/ops/diag.h",
+                "ATen/ops/diag_backward.h",
+                "ATen/ops/diag_embed.h",
+                "ATen/ops/diagflat.h",
+                "ATen/ops/diagonal.h",
+                "ATen/ops/diagonal_backward.h",
+                "ATen/ops/diagonal_scatter.h",
+                "ATen/ops/diff.h",
+                "ATen/ops/digamma.h",
+                "ATen/ops/dist.h",
+                "ATen/ops/div.h",
+                "ATen/ops/divide.h",
+                "ATen/ops/dot.h",
+                "ATen/ops/dropout.h",
+                "ATen/ops/dsplit.h",
+                "ATen/ops/dstack.h",
+                "ATen/ops/eig.h",
+                "ATen/ops/einsum.h",
+                "ATen/ops/elu.h",
+                "ATen/ops/elu_backward.h",
+                "ATen/ops/embedding.h",
+                "ATen/ops/embedding_backward.h",
+                "ATen/ops/embedding_bag.h",
+                "ATen/ops/embedding_dense_backward.h",
+                "ATen/ops/embedding_renorm.h",
+                "ATen/ops/embedding_sparse_backward.h",
+                "ATen/ops/empty.h",
+                "ATen/ops/empty_like.h",
+                "ATen/ops/empty_quantized.h",
+                "ATen/ops/empty_strided.h",
+                "ATen/ops/eq.h",
+                "ATen/ops/equal.h",
+                "ATen/ops/erf.h",
+                "ATen/ops/erfc.h",
+                "ATen/ops/erfinv.h",
+                "ATen/ops/exp.h",
+                "ATen/ops/exp2.h",
+                "ATen/ops/expand.h",
+                "ATen/ops/expand_as.h",
+                "ATen/ops/expm1.h",
+                "ATen/ops/exponential.h",
+                "ATen/ops/eye.h",
+                "ATen/ops/fake_quantize_per_channel_affine.h",
+                "ATen/ops/fake_quantize_per_channel_affine_cachemask.h",
+                "ATen/ops/fake_quantize_per_channel_affine_cachemask_backward.h",
+                "ATen/ops/fake_quantize_per_tensor_affine.h",
+                "ATen/ops/fake_quantize_per_tensor_affine_cachemask.h",
+                "ATen/ops/fake_quantize_per_tensor_affine_cachemask_backward.h",
+                "ATen/ops/fbgemm_linear_fp16_weight.h",
+                "ATen/ops/fbgemm_linear_fp16_weight_fp32_activation.h",
+                "ATen/ops/fbgemm_linear_int8_weight.h",
+                "ATen/ops/fbgemm_linear_int8_weight_fp32_activation.h",
+                "ATen/ops/fbgemm_linear_quantize_weight.h",
+                "ATen/ops/fbgemm_pack_gemm_matrix_fp16.h",
+                "ATen/ops/fbgemm_pack_quantized_matrix.h",
+                "ATen/ops/feature_alpha_dropout.h",
+                "ATen/ops/feature_dropout.h",
+                "ATen/ops/fft_fft.h",
+                "ATen/ops/fft_fft2.h",
+                "ATen/ops/fft_fftfreq.h",
+                "ATen/ops/fft_fftn.h",
+                "ATen/ops/fft_fftshift.h",
+                "ATen/ops/fft_hfft.h",
+                "ATen/ops/fft_hfft2.h",
+                "ATen/ops/fft_hfftn.h",
+                "ATen/ops/fft_ifft.h",
+                "ATen/ops/fft_ifft2.h",
+                "ATen/ops/fft_ifftn.h",
+                "ATen/ops/fft_ifftshift.h",
+                "ATen/ops/fft_ihfft.h",
+                "ATen/ops/fft_ihfft2.h",
+                "ATen/ops/fft_ihfftn.h",
+                "ATen/ops/fft_irfft.h",
+                "ATen/ops/fft_irfft2.h",
+                "ATen/ops/fft_irfftn.h",
+                "ATen/ops/fft_rfft.h",
+                "ATen/ops/fft_rfft2.h",
+                "ATen/ops/fft_rfftfreq.h",
+                "ATen/ops/fft_rfftn.h",
+                "ATen/ops/fill.h",
+                "ATen/ops/fill_diagonal.h",
+                "ATen/ops/fix.h",
+                "ATen/ops/flatten.h",
+                "ATen/ops/flatten_dense_tensors.h",
+                "ATen/ops/flip.h",
+                "ATen/ops/fliplr.h",
+                "ATen/ops/flipud.h",
+                "ATen/ops/float_power.h",
+                "ATen/ops/floor.h",
+                "ATen/ops/floor_divide.h",
+                "ATen/ops/fmax.h",
+                "ATen/ops/fmin.h",
+                "ATen/ops/fmod.h",
+                "ATen/ops/frac.h",
+                "ATen/ops/fractional_max_pool2d.h",
+                "ATen/ops/fractional_max_pool2d_backward.h",
+                "ATen/ops/fractional_max_pool3d.h",
+                "ATen/ops/fractional_max_pool3d_backward.h",
+                "ATen/ops/frexp.h",
+                "ATen/ops/frobenius_norm.h",
+                "ATen/ops/from_file.h",
+                "ATen/ops/full.h",
+                "ATen/ops/full_like.h",
+                "ATen/ops/fused_moving_avg_obs_fake_quant.h",
+                "ATen/ops/gather.h",
+                "ATen/ops/gather_backward.h",
+                "ATen/ops/gcd.h",
+                "ATen/ops/ge.h",
+                "ATen/ops/gelu.h",
+                "ATen/ops/gelu_backward.h",
+                "ATen/ops/geometric.h",
+                "ATen/ops/geqrf.h",
+                "ATen/ops/ger.h",
+                "ATen/ops/glu.h",
+                "ATen/ops/glu_backward.h",
+                "ATen/ops/gradient.h",
+                "ATen/ops/greater.h",
+                "ATen/ops/greater_equal.h",
+                "ATen/ops/grid_sampler.h",
+                "ATen/ops/grid_sampler_2d.h",
+                "ATen/ops/grid_sampler_2d_backward.h",
+                "ATen/ops/grid_sampler_3d.h",
+                "ATen/ops/grid_sampler_3d_backward.h",
+                "ATen/ops/group_norm.h",
+                "ATen/ops/gru.h",
+                "ATen/ops/gru_cell.h",
+                "ATen/ops/gt.h",
+                "ATen/ops/hamming_window.h",
+                "ATen/ops/hann_window.h",
+                "ATen/ops/hardshrink.h",
+                "ATen/ops/hardshrink_backward.h",
+                "ATen/ops/hardsigmoid.h",
+                "ATen/ops/hardsigmoid_backward.h",
+                "ATen/ops/hardswish.h",
+                "ATen/ops/hardswish_backward.h",
+                "ATen/ops/hardtanh.h",
+                "ATen/ops/hardtanh_backward.h",
+                "ATen/ops/heaviside.h",
+                "ATen/ops/hinge_embedding_loss.h",
+                "ATen/ops/histc.h",
+                "ATen/ops/histogram.h",
+                "ATen/ops/hsplit.h",
+                "ATen/ops/hspmm.h",
+                "ATen/ops/hstack.h",
+                "ATen/ops/huber_loss.h",
+                "ATen/ops/huber_loss_backward.h",
+                "ATen/ops/hypot.h",
+                "ATen/ops/i0.h",
+                "ATen/ops/igamma.h",
+                "ATen/ops/igammac.h",
+                "ATen/ops/im2col.h",
+                "ATen/ops/im2col_backward.h",
+                "ATen/ops/imag.h",
+                "ATen/ops/index.h",
+                "ATen/ops/index_add.h",
+                "ATen/ops/index_copy.h",
+                "ATen/ops/index_fill.h",
+                "ATen/ops/index_put.h",
+                "ATen/ops/index_select.h",
+                "ATen/ops/index_select_backward.h",
+                "ATen/ops/indices.h",
+                "ATen/ops/infinitely_differentiable_gelu_backward.h",
+                "ATen/ops/inner.h",
+                "ATen/ops/instance_norm.h",
+                "ATen/ops/int_repr.h",
+                "ATen/ops/inverse.h",
+                "ATen/ops/is_coalesced.h",
+                "ATen/ops/is_complex.h",
+                "ATen/ops/is_conj.h",
+                "ATen/ops/is_distributed.h",
+                "ATen/ops/is_floating_point.h",
+                "ATen/ops/is_inference.h",
+                "ATen/ops/is_leaf.h",
+                "ATen/ops/is_neg.h",
+                "ATen/ops/is_nonzero.h",
+                "ATen/ops/is_pinned.h",
+                "ATen/ops/is_same_size.h",
+                "ATen/ops/is_set_to.h",
+                "ATen/ops/is_signed.h",
+//                "ATen/ops/is_vulkan_available.h",
+                "ATen/ops/isclose.h",
+                "ATen/ops/isfinite.h",
+                "ATen/ops/isin.h",
+                "ATen/ops/isinf.h",
+                "ATen/ops/isnan.h",
+                "ATen/ops/isneginf.h",
+                "ATen/ops/isposinf.h",
+                "ATen/ops/isreal.h",
+                "ATen/ops/istft.h",
+                "ATen/ops/item.h",
+                "ATen/ops/kaiser_window.h",
+                "ATen/ops/kl_div.h",
+                "ATen/ops/kl_div_backward.h",
+                "ATen/ops/kron.h",
+                "ATen/ops/kthvalue.h",
+                "ATen/ops/l1_loss.h",
+                "ATen/ops/l1_loss_backward.h",
+                "ATen/ops/layer_norm.h",
+                "ATen/ops/lcm.h",
+                "ATen/ops/ldexp.h",
+                "ATen/ops/le.h",
+                "ATen/ops/leaky_relu.h",
+                "ATen/ops/leaky_relu_backward.h",
+                "ATen/ops/lerp.h",
+                "ATen/ops/less.h",
+                "ATen/ops/less_equal.h",
+                "ATen/ops/lgamma.h",
+                "ATen/ops/linalg_cholesky.h",
+                "ATen/ops/linalg_cholesky_ex.h",
+                "ATen/ops/linalg_cond.h",
+                "ATen/ops/linalg_cross.h",
+                "ATen/ops/linalg_det.h",
+                "ATen/ops/linalg_diagonal.h",
+                "ATen/ops/linalg_eig.h",
+                "ATen/ops/linalg_eigh.h",
+                "ATen/ops/linalg_eigvals.h",
+                "ATen/ops/linalg_eigvalsh.h",
+                "ATen/ops/linalg_householder_product.h",
+                "ATen/ops/linalg_inv.h",
+                "ATen/ops/linalg_inv_ex.h",
+                "ATen/ops/linalg_lstsq.h",
+                "ATen/ops/linalg_lu_factor.h",
+                "ATen/ops/linalg_lu_factor_ex.h",
+                "ATen/ops/linalg_matmul.h",
+                "ATen/ops/linalg_matrix_exp.h",
+                "ATen/ops/linalg_matrix_norm.h",
+                "ATen/ops/linalg_matrix_power.h",
+                "ATen/ops/linalg_matrix_rank.h",
+                "ATen/ops/linalg_multi_dot.h",
+                "ATen/ops/linalg_norm.h",
+                "ATen/ops/linalg_pinv.h",
+                "ATen/ops/linalg_qr.h",
+                "ATen/ops/linalg_slogdet.h",
+                "ATen/ops/linalg_solve.h",
+                "ATen/ops/linalg_solve_triangular.h",
+                "ATen/ops/linalg_svd.h",
+                "ATen/ops/linalg_svdvals.h",
+                "ATen/ops/linalg_tensorinv.h",
+                "ATen/ops/linalg_tensorsolve.h",
+                "ATen/ops/linalg_vector_norm.h",
+                "ATen/ops/linear.h",
+                "ATen/ops/linspace.h",
+                "ATen/ops/log.h",
+                "ATen/ops/log10.h",
+                "ATen/ops/log1p.h",
+                "ATen/ops/log2.h",
+                "ATen/ops/log_normal.h",
+                "ATen/ops/log_sigmoid.h",
+                "ATen/ops/log_sigmoid_backward.h",
+                "ATen/ops/log_sigmoid_forward.h",
+                "ATen/ops/log_softmax.h",
+                "ATen/ops/logaddexp.h",
+                "ATen/ops/logaddexp2.h",
+                "ATen/ops/logcumsumexp.h",
+                "ATen/ops/logdet.h",
+                "ATen/ops/logical_and.h",
+                "ATen/ops/logical_not.h",
+                "ATen/ops/logical_or.h",
+                "ATen/ops/logical_xor.h",
+                "ATen/ops/logit.h",
+                "ATen/ops/logit_backward.h",
+                "ATen/ops/logspace.h",
+                "ATen/ops/logsumexp.h",
+                "ATen/ops/lshift.h",
+                "ATen/ops/lstm.h",
+                "ATen/ops/lstm_cell.h",
+                "ATen/ops/lstsq.h",
+                "ATen/ops/lt.h",
+                "ATen/ops/lu_solve.h",
+                "ATen/ops/lu_unpack.h",
+                "ATen/ops/mH.h",
+                "ATen/ops/mT.h",
+                "ATen/ops/margin_ranking_loss.h",
+                "ATen/ops/masked_fill.h",
+                "ATen/ops/masked_scatter.h",
+                "ATen/ops/masked_select.h",
+                "ATen/ops/masked_select_backward.h",
+                "ATen/ops/matmul.h",
+                "ATen/ops/matrix_H.h",
+                "ATen/ops/matrix_exp.h",
+                "ATen/ops/matrix_exp_backward.h",
+                "ATen/ops/matrix_power.h",
+                "ATen/ops/matrix_rank.h",
+                "ATen/ops/max.h",
+                "ATen/ops/max_pool1d.h",
+                "ATen/ops/max_pool1d_with_indices.h",
+                "ATen/ops/max_pool2d.h",
+                "ATen/ops/max_pool2d_with_indices.h",
+                "ATen/ops/max_pool2d_with_indices_backward.h",
+                "ATen/ops/max_pool3d.h",
+                "ATen/ops/max_pool3d_with_indices.h",
+                "ATen/ops/max_pool3d_with_indices_backward.h",
+                "ATen/ops/max_unpool2d.h",
+                "ATen/ops/max_unpool2d_backward.h",
+                "ATen/ops/max_unpool3d.h",
+                "ATen/ops/max_unpool3d_backward.h",
+                "ATen/ops/maximum.h",
+                "ATen/ops/mean.h",
+                "ATen/ops/median.h",
+                "ATen/ops/meshgrid.h",
+                "ATen/ops/min.h",
+                "ATen/ops/minimum.h",
+                "ATen/ops/miopen_batch_norm.h",
+                "ATen/ops/miopen_batch_norm_backward.h",
+                "ATen/ops/miopen_convolution.h",
+                "ATen/ops/miopen_convolution_transpose.h",
+                "ATen/ops/miopen_depthwise_convolution.h",
+                "ATen/ops/miopen_rnn.h",
+                "ATen/ops/miopen_rnn_backward.h",
+                "ATen/ops/mish.h",
+                "ATen/ops/mish_backward.h",
+                "ATen/ops/mkldnn_adaptive_avg_pool2d.h",
+                "ATen/ops/mkldnn_adaptive_avg_pool2d_backward.h",
+                "ATen/ops/mkldnn_convolution.h",
+                "ATen/ops/mkldnn_linear.h",
+                "ATen/ops/mkldnn_linear_backward.h",
+                "ATen/ops/mkldnn_linear_backward_input.h",
+                "ATen/ops/mkldnn_linear_backward_weights.h",
+                "ATen/ops/mkldnn_max_pool2d.h",
+                "ATen/ops/mkldnn_max_pool2d_backward.h",
+                "ATen/ops/mkldnn_max_pool3d.h",
+                "ATen/ops/mkldnn_max_pool3d_backward.h",
+                "ATen/ops/mkldnn_reorder_conv2d_weight.h",
+                "ATen/ops/mkldnn_reorder_conv3d_weight.h",
+                "ATen/ops/mm.h",
+                "ATen/ops/mode.h",
+                "ATen/ops/moveaxis.h",
+                "ATen/ops/movedim.h",
+                "ATen/ops/mse_loss.h",
+                "ATen/ops/mse_loss_backward.h",
+                "ATen/ops/msort.h",
+                "ATen/ops/mul.h",
+                "ATen/ops/multi_margin_loss.h",
+                "ATen/ops/multi_margin_loss_backward.h",
+                "ATen/ops/multilabel_margin_loss.h",
+                "ATen/ops/multilabel_margin_loss_backward.h",
+                "ATen/ops/multilabel_margin_loss_forward.h",
+                "ATen/ops/multinomial.h",
+                "ATen/ops/multiply.h",
+                "ATen/ops/mv.h",
+                "ATen/ops/mvlgamma.h",
+                "ATen/ops/nan_to_num.h",
+                "ATen/ops/nanmean.h",
+                "ATen/ops/nanmedian.h",
+                "ATen/ops/nanquantile.h",
+                "ATen/ops/nansum.h",
+                "ATen/ops/narrow.h",
+                "ATen/ops/narrow_copy.h",
+                "ATen/ops/native_batch_norm.h",
+                "ATen/ops/native_batch_norm_backward.h",
+                "ATen/ops/native_channel_shuffle.h",
+                "ATen/ops/native_dropout.h",
+                "ATen/ops/native_dropout_backward.h",
+                "ATen/ops/native_group_norm.h",
+                "ATen/ops/native_group_norm_backward.h",
+                "ATen/ops/native_layer_norm.h",
+                "ATen/ops/native_layer_norm_backward.h",
+                "ATen/ops/native_norm.h",
+                "ATen/ops/ne.h",
+                "ATen/ops/neg.h",
+                "ATen/ops/negative.h",
+                "ATen/ops/new_empty.h",
+                "ATen/ops/new_empty_strided.h",
+                "ATen/ops/new_full.h",
+                "ATen/ops/new_ones.h",
+                "ATen/ops/new_zeros.h",
+                "ATen/ops/nextafter.h",
+                "ATen/ops/nll_loss.h",
+                "ATen/ops/nll_loss2d.h",
+                "ATen/ops/nll_loss2d_backward.h",
+                "ATen/ops/nll_loss2d_forward.h",
+                "ATen/ops/nll_loss_backward.h",
+                "ATen/ops/nll_loss_forward.h",
+                "ATen/ops/nll_loss_nd.h",
+                "ATen/ops/nonzero.h",
+                "ATen/ops/nonzero_numpy.h",
+                "ATen/ops/norm.h",
+                "ATen/ops/norm_except_dim.h",
+                "ATen/ops/normal.h",
+                "ATen/ops/not_equal.h",
+                "ATen/ops/nuclear_norm.h",
+                "ATen/ops/numpy_T.h",
+                "ATen/ops/one_hot.h",
+                "ATen/ops/ones.h",
+                "ATen/ops/ones_like.h",
+                "ATen/ops/or.h",
+                "ATen/ops/orgqr.h",
+                "ATen/ops/ormqr.h",
+                "ATen/ops/outer.h",
+                "ATen/ops/output_nr.h",
+                "ATen/ops/pad_sequence.h",
+                "ATen/ops/pairwise_distance.h",
+                "ATen/ops/pdist.h",
+                "ATen/ops/permute.h",
+                "ATen/ops/pin_memory.h",
+                "ATen/ops/pinverse.h",
+                "ATen/ops/pixel_shuffle.h",
+                "ATen/ops/pixel_unshuffle.h",
+                "ATen/ops/poisson.h",
+                "ATen/ops/poisson_nll_loss.h",
+                "ATen/ops/polar.h",
+                "ATen/ops/polygamma.h",
+                "ATen/ops/positive.h",
+                "ATen/ops/pow.h",
+                "ATen/ops/prelu.h",
+                "ATen/ops/prelu_backward.h",
+                "ATen/ops/prod.h",
+                "ATen/ops/promote_types.h",
+                "ATen/ops/put.h",
+                "ATen/ops/q_per_channel_axis.h",
+                "ATen/ops/q_per_channel_scales.h",
+                "ATen/ops/q_per_channel_zero_points.h",
+                "ATen/ops/q_scale.h",
+                "ATen/ops/q_zero_point.h",
+                "ATen/ops/qr.h",
+                "ATen/ops/qscheme.h",
+                "ATen/ops/quantile.h",
+                "ATen/ops/quantize_per_channel.h",
+                "ATen/ops/quantize_per_tensor.h",
+                "ATen/ops/quantize_per_tensor_dynamic.h",
+                "ATen/ops/quantized_batch_norm.h",
+                "ATen/ops/quantized_gru_cell.h",
+                "ATen/ops/quantized_lstm_cell.h",
+                "ATen/ops/quantized_max_pool1d.h",
+                "ATen/ops/quantized_max_pool2d.h",
+                "ATen/ops/quantized_rnn_relu_cell.h",
+                "ATen/ops/quantized_rnn_tanh_cell.h",
+                "ATen/ops/rad2deg.h",
+                "ATen/ops/rand.h",
+                "ATen/ops/rand_like.h",
+                "ATen/ops/randint.h",
+                "ATen/ops/randint_like.h",
+                "ATen/ops/randn.h",
+                "ATen/ops/randn_like.h",
+                "ATen/ops/random.h",
+                "ATen/ops/randperm.h",
+                "ATen/ops/range.h",
+                "ATen/ops/ravel.h",
+                "ATen/ops/real.h",
+                "ATen/ops/reciprocal.h",
+                "ATen/ops/record_stream.h",
+                "ATen/ops/refine_names.h",
+                "ATen/ops/reflection_pad1d.h",
+                "ATen/ops/reflection_pad1d_backward.h",
+                "ATen/ops/reflection_pad2d.h",
+                "ATen/ops/reflection_pad2d_backward.h",
+                "ATen/ops/reflection_pad3d.h",
+                "ATen/ops/reflection_pad3d_backward.h",
+                "ATen/ops/relu.h",
+                "ATen/ops/relu6.h",
+                "ATen/ops/remainder.h",
+                "ATen/ops/rename.h",
+                "ATen/ops/renorm.h",
+                "ATen/ops/repeat.h",
+                "ATen/ops/repeat_interleave.h",
+                "ATen/ops/replication_pad1d.h",
+                "ATen/ops/replication_pad1d_backward.h",
+                "ATen/ops/replication_pad2d.h",
+                "ATen/ops/replication_pad2d_backward.h",
+                "ATen/ops/replication_pad3d.h",
+                "ATen/ops/replication_pad3d_backward.h",
+                "ATen/ops/requires_grad.h",
+                "ATen/ops/reshape.h",
+                "ATen/ops/reshape_as.h",
+                "ATen/ops/resize.h",
+                "ATen/ops/resize_as.h",
+                "ATen/ops/resize_as_sparse.h",
+                "ATen/ops/resolve_conj.h",
+                "ATen/ops/resolve_neg.h",
+                "ATen/ops/result_type.h",
+                "ATen/ops/retain_grad.h",
+                "ATen/ops/retains_grad.h",
+                "ATen/ops/rnn_relu.h",
+                "ATen/ops/rnn_relu_cell.h",
+                "ATen/ops/rnn_tanh.h",
+                "ATen/ops/rnn_tanh_cell.h",
+                "ATen/ops/roll.h",
+                "ATen/ops/rot90.h",
+                "ATen/ops/round.h",
+                "ATen/ops/row_stack.h",
+                "ATen/ops/rrelu.h",
+                "ATen/ops/rrelu_with_noise.h",
+                "ATen/ops/rrelu_with_noise_backward.h",
+                "ATen/ops/rshift.h",
+                "ATen/ops/rsqrt.h",
+                "ATen/ops/rsub.h",
+                "ATen/ops/scalar_tensor.h",
+                "ATen/ops/scatter.h",
+                "ATen/ops/scatter_add.h",
+                "ATen/ops/scatter_reduce.h",
+                "ATen/ops/searchsorted.h",
+                "ATen/ops/segment_reduce.h",
+                "ATen/ops/select.h",
+                "ATen/ops/select_backward.h",
+                "ATen/ops/select_scatter.h",
+                "ATen/ops/selu.h",
+                "ATen/ops/set.h",
+                "ATen/ops/set_data.h",
+                "ATen/ops/sgn.h",
+                "ATen/ops/sigmoid.h",
+                "ATen/ops/sigmoid_backward.h",
+                "ATen/ops/sign.h",
+                "ATen/ops/signbit.h",
+                "ATen/ops/silu.h",
+                "ATen/ops/silu_backward.h",
+                "ATen/ops/sin.h",
+                "ATen/ops/sinc.h",
+                "ATen/ops/sinh.h",
+                "ATen/ops/size.h",
+                "ATen/ops/slice.h",
+                "ATen/ops/slice_backward.h",
+                "ATen/ops/slice_scatter.h",
+                "ATen/ops/slogdet.h",
+                "ATen/ops/slow_conv3d.h",
+                "ATen/ops/slow_conv3d_forward.h",
+                "ATen/ops/slow_conv_dilated2d.h",
+                "ATen/ops/slow_conv_dilated3d.h",
+                "ATen/ops/slow_conv_transpose2d.h",
+                "ATen/ops/slow_conv_transpose3d.h",
+                "ATen/ops/smm.h",
+                "ATen/ops/smooth_l1_loss.h",
+                "ATen/ops/smooth_l1_loss_backward.h",
+                "ATen/ops/soft_margin_loss.h",
+                "ATen/ops/soft_margin_loss_backward.h",
+                "ATen/ops/softmax.h",
+                "ATen/ops/softplus.h",
+                "ATen/ops/softplus_backward.h",
+                "ATen/ops/softshrink.h",
+                "ATen/ops/softshrink_backward.h",
+                "ATen/ops/solve.h",
+                "ATen/ops/sort.h",
+                "ATen/ops/sparse_coo_tensor.h",
+                "ATen/ops/sparse_csr_tensor.h",
+                "ATen/ops/sparse_dim.h",
+                "ATen/ops/sparse_mask.h",
+                "ATen/ops/sparse_resize.h",
+                "ATen/ops/sparse_resize_and_clear.h",
+                "ATen/ops/sparse_sampled_addmm.h",
+                "ATen/ops/special_digamma.h",
+                "ATen/ops/special_entr.h",
+                "ATen/ops/special_erf.h",
+                "ATen/ops/special_erfc.h",
+                "ATen/ops/special_erfcx.h",
+                "ATen/ops/special_erfinv.h",
+                "ATen/ops/special_exp2.h",
+                "ATen/ops/special_expit.h",
+                "ATen/ops/special_expm1.h",
+                "ATen/ops/special_gammainc.h",
+                "ATen/ops/special_gammaincc.h",
+                "ATen/ops/special_gammaln.h",
+                "ATen/ops/special_i0.h",
+                "ATen/ops/special_i0e.h",
+                "ATen/ops/special_i1.h",
+                "ATen/ops/special_i1e.h",
+                "ATen/ops/special_log1p.h",
+                "ATen/ops/special_log_softmax.h",
+                "ATen/ops/special_logit.h",
+                "ATen/ops/special_logsumexp.h",
+                "ATen/ops/special_multigammaln.h",
+                "ATen/ops/special_ndtr.h",
+                "ATen/ops/special_ndtri.h",
+                "ATen/ops/special_polygamma.h",
+                "ATen/ops/special_psi.h",
+                "ATen/ops/special_round.h",
+                "ATen/ops/special_sinc.h",
+                "ATen/ops/special_softmax.h",
+                "ATen/ops/special_xlog1py.h",
+                "ATen/ops/special_xlogy.h",
+                "ATen/ops/special_zeta.h",
+                "ATen/ops/split.h",
+                "ATen/ops/split_with_sizes.h",
+                "ATen/ops/sqrt.h",
+                "ATen/ops/square.h",
+                "ATen/ops/squeeze.h",
+                "ATen/ops/sspaddmm.h",
+                "ATen/ops/stack.h",
+                "ATen/ops/std.h",
+                "ATen/ops/std_mean.h",
+                "ATen/ops/stft.h",
+                "ATen/ops/stride.h",
+                "ATen/ops/sub.h",
+                "ATen/ops/subtract.h",
+                "ATen/ops/sum.h",
+                "ATen/ops/sum_to_size.h",
+                "ATen/ops/svd.h",
+                "ATen/ops/swapaxes.h",
+                "ATen/ops/swapdims.h",
+                "ATen/ops/symeig.h",
+                "ATen/ops/t.h",
+                "ATen/ops/take.h",
+                "ATen/ops/take_along_dim.h",
+                "ATen/ops/tan.h",
+                "ATen/ops/tanh.h",
+                "ATen/ops/tanh_backward.h",
+                "ATen/ops/tensor_split.h",
+                "ATen/ops/tensordot.h",
+                "ATen/ops/thnn_conv2d.h",
+                "ATen/ops/threshold.h",
+                "ATen/ops/threshold_backward.h",
+                "ATen/ops/tile.h",
+                "ATen/ops/to.h",
+                "ATen/ops/to_dense.h",
+                "ATen/ops/to_dense_backward.h",
+                "ATen/ops/to_mkldnn.h",
+                "ATen/ops/to_mkldnn_backward.h",
+                "ATen/ops/to_sparse.h",
+                "ATen/ops/topk.h",
+                "ATen/ops/trace.h",
+                "ATen/ops/trace_backward.h",
+                "ATen/ops/transpose.h",
+                "ATen/ops/trapezoid.h",
+                "ATen/ops/trapz.h",
+                "ATen/ops/triangular_solve.h",
+                "ATen/ops/tril.h",
+                "ATen/ops/tril_indices.h",
+                "ATen/ops/triplet_margin_loss.h",
+                "ATen/ops/triu.h",
+                "ATen/ops/triu_indices.h",
+                "ATen/ops/true_divide.h",
+                "ATen/ops/trunc.h",
+                "ATen/ops/type_as.h",
+                "ATen/ops/unbind.h",
+                "ATen/ops/unflatten.h",
+                "ATen/ops/unflatten_dense_tensors.h",
+                "ATen/ops/unfold.h",
+                "ATen/ops/unfold_backward.h",
+                "ATen/ops/uniform.h",
+                "ATen/ops/unique_consecutive.h",
+                "ATen/ops/unique_dim.h",
+                "ATen/ops/unique_dim_consecutive.h",
+                "ATen/ops/unsafe_chunk.h",
+                "ATen/ops/unsafe_split.h",
+                "ATen/ops/unsafe_split_with_sizes.h",
+                "ATen/ops/unsqueeze.h",
+                "ATen/ops/upsample_bicubic2d.h",
+                "ATen/ops/upsample_bicubic2d_backward.h",
+                "ATen/ops/upsample_bilinear2d.h",
+                "ATen/ops/upsample_bilinear2d_backward.h",
+                "ATen/ops/upsample_linear1d.h",
+                "ATen/ops/upsample_linear1d_backward.h",
+                "ATen/ops/upsample_nearest1d.h",
+                "ATen/ops/upsample_nearest1d_backward.h",
+                "ATen/ops/upsample_nearest2d.h",
+                "ATen/ops/upsample_nearest2d_backward.h",
+                "ATen/ops/upsample_nearest3d.h",
+                "ATen/ops/upsample_nearest3d_backward.h",
+                "ATen/ops/upsample_trilinear3d.h",
+                "ATen/ops/upsample_trilinear3d_backward.h",
+                "ATen/ops/value_selecting_reduction_backward.h",
+                "ATen/ops/values.h",
+                "ATen/ops/vander.h",
+                "ATen/ops/var.h",
+                "ATen/ops/var_mean.h",
+                "ATen/ops/vdot.h",
+                "ATen/ops/view.h",
+                "ATen/ops/view_as.h",
+                "ATen/ops/view_as_complex.h",
+                "ATen/ops/view_as_real.h",
+                "ATen/ops/vsplit.h",
+                "ATen/ops/vstack.h",
+                "ATen/ops/where.h",
+                "ATen/ops/xlogy.h",
+                "ATen/ops/xor.h",
+                "ATen/ops/zero.h",
+                "ATen/ops/zeros.h",
+                "ATen/ops/zeros_like.h",
+
                 "torch/autograd.h",
 //                "torch/library.h",
 //                "torch/custom_class.h",
                 "torch/script.h",
+                "torch/csrc/Export.h",
                 "torch/csrc/onnx/onnx.h",
-                "torch/csrc/WindowsTorchApiMacro.h",
+//                "torch/csrc/WindowsTorchApiMacro.h",
+                "torch/csrc/api/include/torch/imethod.h",
                 "torch/csrc/api/include/torch/types.h",
                 "torch/csrc/api/include/torch/cuda.h",
-//                "torch/csrc/api/include/torch/ordered_dict.h",
+                "torch/csrc/api/include/torch/ordered_dict.h",
 //                "torch/csrc/api/include/torch/detail/TensorDataContainer.h",
                 "torch/csrc/utils/disallow_copy.h",
                 "torch/csrc/utils/memory.h",
@@ -231,6 +1329,7 @@ import org.bytedeco.openblas.presets.openblas;
                 "torch/csrc/autograd/function_hook.h",
                 "torch/csrc/autograd/cpp_hook.h",
                 "torch/csrc/autograd/profiler.h",
+                "torch/csrc/autograd/saved_variable_hooks.h",
                 "torch/csrc/autograd/saved_variable.h",
                 "torch/csrc/autograd/forward_grad.h",
                 "torch/csrc/autograd/variable.h",
@@ -281,6 +1380,7 @@ import org.bytedeco.openblas.presets.openblas;
                 "torch/csrc/jit/serialization/pickle.h",
                 "torch/csrc/jit/serialization/python_print.h",
                 "torch/csrc/jit/serialization/type_name_uniquer.h",
+                "torch/csrc/jit/serialization/storage_context.h",
                 "torch/csrc/jit/serialization/export.h",
 
                 "torch/arg.h",
@@ -453,6 +1553,9 @@ public class torch implements LoadEnabled, InfoMapper {
             return;
         }
         int i = 0;
+        if (platform.startsWith("windows")) {
+            preloads.add(i++, "zlibwapi");
+        }
         String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "curand", "cusolver", "cusparse", "cudnn", "nccl", "nvrtc", "myelin", "nvinfer",
                          "cudnn_ops_infer", "cudnn_ops_train", "cudnn_adv_infer", "cudnn_adv_train", "cudnn_cnn_infer", "cudnn_cnn_train"};
         for (String lib : libs) {
@@ -534,12 +1637,13 @@ public class torch implements LoadEnabled, InfoMapper {
 
     public void map(InfoMap infoMap) {
         infoMap.putFirst(new Info("openblas_config.h", "cblas.h", "lapacke_config.h", "lapacke_mangling.h", "lapack.h", "lapacke.h", "lapacke_utils.h").skip())
+               .put(new Info("ordered_dict.h").linePatterns(".*class Item;.*").skip())
                .put(new Info().enumerate())
                .put(new Info().javaText("import org.bytedeco.pytorch.Allocator;"))
                .put(new Info().javaText("import org.bytedeco.pytorch.Function;"))
                .put(new Info().javaText("import org.bytedeco.pytorch.Module;"))
 
-               .put(new Info("basic/containers").cppTypes("c10::optional", "c10::Dict", "torch::optional", "torch::OrderedDict", "c10::variant"))
+               .put(new Info("basic/containers").cppTypes("c10::optional", "torch::optional", "c10::variant"))
                .put(new Info("std::nullptr_t").cast().pointerTypes("PointerPointer"))
                .put(new Info("auto", "c10::reverse_iterator", "ska::flat_hash_map", "std::atomic", "std::conditional", "std::iterator_traits",
                              "std::initializer_list", "std::integral_constant", "std::mutex", "std::reverse_iterator", "std::weak_ptr").skip())
@@ -548,7 +1652,7 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("c10::ScalarType", "at::ScalarType", "torch::Dtype").enumerate().valueTypes("ScalarType").pointerTypes("@Cast(\"c10::ScalarType*\") BytePointer"))
                .put(new Info("torch::jit::AttributeKind").enumerate().valueTypes("JitAttributeKind"))
                .put(new Info("torch::jit::PickleOpCode").enumerate().translate(false).valueTypes("PickleOpCode"))
-               .put(new Info("std::size_t").cast().valueTypes("long").pointerTypes("SizeTPointer"))
+               .put(new Info("std::size_t", "c10::Dict<c10::IValue,c10::IValue>::size_type").cast().valueTypes("long").pointerTypes("SizeTPointer"))
                .put(new Info("std::tuple<int64_t,int64_t>", "std::tuple<double,int64_t>",
                              "torch::ExpandingArray<1>", "torch::ExpandingArray<2>", "torch::ExpandingArray<3>", "torch::ExpandingArray<4>",
                              "torch::ExpandingArray<D*2>", "torch::ExpandingArray<1*2>", "torch::ExpandingArray<2*2>", "torch::ExpandingArray<3*2>",
@@ -593,7 +1697,7 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("c10::optional<at::Dimname>").pointerTypes("DimnameOptional").define())
                .put(new Info("c10::optional<at::DimnameList>").pointerTypes("DimnameListOptional").define())
                .put(new Info("c10::optional<at::Generator>").pointerTypes("GeneratorOptional").define())
-               .put(new Info("c10::optional<at::Tensor>", "c10::optional<torch::autograd::Variable>").pointerTypes("TensorOptional").define())
+               .put(new Info("c10::optional<at::Tensor>", "c10::optional<at::TensorBase>", "c10::optional<torch::autograd::Variable>").pointerTypes("TensorOptional").define())
                .put(new Info("c10::optional<at::TensorList>").pointerTypes("TensorListOptional").define())
                .put(new Info("c10::optional<at::ThreadLocalState>").pointerTypes("ThreadLocalStateOptional").define())
                .put(new Info("c10::optional<caffe2::TypeMeta>").pointerTypes("TypeMetaOptional").define())
@@ -618,6 +1722,33 @@ public class torch implements LoadEnabled, InfoMapper {
                              "c10::optional<torch::nn::FractionalMaxPoolOptions<3>::ExpandingArrayDouble>").cast().pointerTypes("DoubleExpandingArrayOptional").define())
                .put(new Info("c10::optional<std::tuple<std::string,size_t,size_t> >").pointerTypes("StringSizeTSizeTTupleOptional").define())
                .put(new Info("torch::optional<std::tuple<at::Tensor,at::Tensor> >").pointerTypes("TensorTensorOptional").define())
+
+               .put(new Info("c10::Type::SingletonOrSharedTypePtr<c10::Type>", "c10::TypePtr", "c10::Type::TypePtr", "decltype(auto)").pointerTypes("Type.TypePtr").define())
+               .put(new Info("c10::Type::SingletonOrSharedTypePtr<c10::Type>(c10::SingletonTypePtr<c10::Type>)",
+                             "c10::ComplexType::get", "c10::FloatType::get", "c10::IntType::get").skip())
+               .put(new Info("c10::SingletonTypePtr<c10::Type>").pointerTypes("SingletonTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::AnyType>").pointerTypes("AnyTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::AnyEnumType>").pointerTypes("AnyEnumTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::NumberType>").pointerTypes("NumberTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::FloatType>").pointerTypes("FloatTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::ComplexType>").pointerTypes("ComplexTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::IntType>").pointerTypes("IntTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::BoolType>").pointerTypes("BoolTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::StringType>").pointerTypes("StringTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::StorageType>").pointerTypes("StorageTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::NoneType>").pointerTypes("NoneTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::GeneratorType>").pointerTypes("GeneratorTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::QuantizerType>").pointerTypes("QuantizerTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::QSchemeType>").pointerTypes("QSchemeTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::DeviceObjType>").pointerTypes("DeviceObjTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::StreamObjType>").pointerTypes("StreamObjTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::CapsuleType>").pointerTypes("CapsuleTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::PyObjectType>").pointerTypes("PyObjectTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::LayoutType>").pointerTypes("LayoutTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::ScalarTypeType>").pointerTypes("ScalarTypeTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::AnyListType>").pointerTypes("AnyListTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::AnyTupleType>").pointerTypes("AnyTupleTypePtr").define())
+               .put(new Info("c10::SingletonTypePtr<c10::AnyClassType>").pointerTypes("AnyClassTypePtr").define())
 
                .put(new Info("c10::variant<torch::enumtype::kLinear,torch::enumtype::kConv1D,torch::enumtype::kConv2D,torch::enumtype::kConv3D,"
                                         + "torch::enumtype::kConvTranspose1D,torch::enumtype::kConvTranspose2D,torch::enumtype::kConvTranspose3D,"
@@ -690,10 +1821,10 @@ public class torch implements LoadEnabled, InfoMapper {
 
                .put(new Info("c10::variant<torch::enumtype::kNearest,torch::enumtype::kLinear,torch::enumtype::kBilinear,torch::enumtype::kBicubic,torch::enumtype::kTrilinear>",
                              "torch::nn::UpsampleOptions::mode_t").pointerTypes("upsample_mode_t").define())
-               .put(new Info("c10::variant<torch::enumtype::kNearest,torch::enumtype::kLinear,torch::enumtype::kBilinear,torch::enumtype::kBicubic,torch::enumtype::kTrilinear,torch::enumtype::kArea>",
+               .put(new Info("c10::variant<torch::enumtype::kNearest,torch::enumtype::kLinear,torch::enumtype::kBilinear,torch::enumtype::kBicubic,torch::enumtype::kTrilinear,torch::enumtype::kArea,torch::enumtype::kNearestExact>",
                              "torch::nn::functional::InterpolateFuncOptions::mode_t").pointerTypes("interpolate_mode_t").define())
 
-               .put(new Info("c10::variant<torch::enumtype::kReLU,torch::enumtype::kGELU>",
+               .put(new Info("c10::variant<torch::enumtype::kReLU,torch::enumtype::kGELU,std::function<at::Tensor(const at::Tensor&)> >",
                              "torch::nn::TransformerEncoderLayerOptions::activation_t",
                              "torch::nn::TransformerDecoderLayerOptions::activation_t",
                              "torch::nn::TransformerOptions::activation_t").pointerTypes("transformer_activation_t").define())
@@ -708,38 +1839,41 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("std::vector<std::pair<std::string,int64_t> >").pointerTypes("StringLongVector").define())
                .put(new Info("const std::vector<std::pair<at::RecordFunctionCallback,uint64_t> >",
                              "std::vector<std::pair<at::RecordFunctionCallback,at::CallbackHandle> >").pointerTypes("RecordFunctionCallbackHandleVector").define())
+               .put(new Info("std::vector<c10::Argument>").pointerTypes("ArgumentVector").define())
                .put(new Info("std::vector<c10::IValue>", "torch::jit::Stack").pointerTypes("IValueVector").define())
                .put(new Info("std::vector<c10::QEngine>", "std::vector<at::QEngine>").pointerTypes("QEngineVector").define())
                .put(new Info("std::vector<c10::ScalarType>").pointerTypes("ScalarTypeVector").define())
                .put(new Info("std::vector<c10::Symbol>").pointerTypes("SymbolVector").define())
-               .put(new Info("c10::Dict<c10::IValue,c10::IValue>").pointerTypes("IValueIValueDict").define())
+               .put(new Info("c10::Dict<c10::IValue,c10::IValue>").pointerTypes("GenericDict").define())
                .put(new Info("std::map<std::string,std::string>").pointerTypes("StringStringMap").define())
                .put(new Info("std::map<std::string,int>").pointerTypes("StringIntMap").define())
                .put(new Info("std::map<std::string,int64_t>").pointerTypes("StringLongMap").define())
                .put(new Info("std::map<std::string,at::Tensor>").pointerTypes("StringTensorMap").define())
                .put(new Info("std::unordered_set<std::string>").pointerTypes("StringSet").define())
-               .put(new Info("std::unordered_set<c10::IValue,c10::IValue::HashAliasedIValue,c10::IValue::CompAliasedIValues>").pointerTypes("IValueSet").define())
+               .put(new Info("std::unordered_set<c10::IValue,c10::IValue::HashAliasedIValue,c10::IValue::CompAliasedIValues>").pointerTypes("HashAliasedIValues").define())
                .put(new Info("std::unordered_set<c10::Symbol>").pointerTypes("SymbolSet").define())
                .put(new Info("std::unordered_set<at::TensorImpl*>").pointerTypes("TensorImplSet").define())
                .put(new Info("std::unordered_set<at::RecordScope,std::hash<at::RecordScope> >").pointerTypes("RecordScopeSet").define())
-               .put(new Info("std::unordered_map<c10::IValue,c10::IValue,c10::IValue::HashAliasedIValue,c10::IValue::CompAliasedIValues>").pointerTypes("IValueIValueMap").define())
+               .put(new Info("std::unordered_map<c10::IValue,c10::IValue,c10::IValue::HashAliasedIValue,c10::IValue::CompAliasedIValues>").pointerTypes("HashAliasedIValueMap").define())
                .put(new Info("std::unordered_map<int64_t,std::string>").pointerTypes("LongStringMap").define())
                .put(new Info("std::unordered_map<std::string,size_t>").pointerTypes("StringSizeTMap").define())
-               .put(new Info("std::unordered_map<std::string,c10::IValue>").pointerTypes("StringIValueMap").define())
+               .put(new Info("std::unordered_map<std::string,std::string>").pointerTypes("ExtraFilesMap").define())
+               .put(new Info("std::unordered_map<std::string,c10::TypePtr>").pointerTypes("TypeEnv").define())
+               .put(new Info("std::unordered_map<std::string,c10::IValue>", "std::unordered_map<std::string,at::IValue>").pointerTypes("StringIValueMap").define())
                .put(new Info("std::unordered_map<std::string,std::function<PyObject*(void*)> >").pointerTypes("StringFunctionMap").define())
                .put(new Info("std::unordered_map<std::string,torch::jit::Value*>").pointerTypes("StringValueMap").define())
                .put(new Info("std::unordered_map<std::string,std::unordered_map<int64_t,std::string> >").pointerTypes("StringLongStringMapMap").define())
                .put(new Info("std::unordered_map<torch::jit::ArgumentSpec,torch::jit::ExecutionPlan>").pointerTypes("ArgumentSpecExecutionPlanMap").define())
                .put(new Info("std::unordered_map<torch::jit::Value*,torch::jit::Value*>").pointerTypes("ValueValueMap").define())
                .put(new Info("std::vector<std::shared_ptr<c10::ClassType> >", "std::vector<c10::ClassTypePtr>").pointerTypes("ClassTypeVector").define())
-               .put(new Info("std::vector<std::shared_ptr<c10::Type> >", "std::vector<c10::TypePtr>").pointerTypes("TypeVector").define())
+               .put(new Info("std::vector<c10::Type::SingletonOrSharedTypePtr<c10::Type> >", "std::vector<c10::TypePtr>", "std::vector<c10::Type::TypePtr>").pointerTypes("TypeVector").define())
                .put(new Info("const std::vector<at::Dimname>", "std::vector<at::Dimname>").valueTypes("@StdMove DimnameVector").pointerTypes("DimnameVector").define())
                .put(new Info("std::vector<c10::Stride>").pointerTypes("StrideVector").define())
                .put(new Info("std::vector<c10::ShapeSymbol>").pointerTypes("ShapeSymbolVector").define())
                .put(new Info("std::vector<c10::TensorImpl*>").pointerTypes("TensorImplVector").define())
                .put(new Info("std::vector<torch::autograd::Edge>", "torch::autograd::edge_list")
                        .valueTypes("@Cast({\"\", \"std::vector<torch::autograd::Edge>\"}) @StdMove EdgeVector").pointerTypes("EdgeVector").define())
-               .put(new Info("std::vector<at::Tensor>", "std::vector<torch::autograd::Variable>", "torch::autograd::variable_list")
+               .put(new Info("std::vector<at::Tensor>", "std::vector<at::Tensor,A>", "std::vector<torch::autograd::Variable>", "torch::autograd::variable_list")
                        .valueTypes("@Cast({\"\", \"std::vector<at::Tensor>\"}) @StdMove TensorVector").pointerTypes("TensorVector").define())
                .put(new Info("std::vector<at::indexing::TensorIndex>", "std::vector<at::indexing::TensorIndex,A>").pointerTypes("TensorIndexVector").define())
                .put(new Info("std::vector<c10::optional<torch::autograd::Variable> >").pointerTypes("TensorOptionalVector").define())
@@ -756,6 +1890,7 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("const std::vector<torch::jit::Property>", "std::vector<torch::jit::Property>").pointerTypes("PropertyVector").define())
                .put(new Info("const std::vector<torch::jit::Instruction>", "std::vector<torch::jit::Instruction>").pointerTypes("InstructionVector").define())
                .put(new Info("const std::vector<torch::jit::CompilationUnit>", "std::vector<torch::jit::CompilationUnit>").pointerTypes("CompilationUnitVector").define())
+               .put(new Info("const std::vector<torch::optim::OptimizerParamGroup>", "std::vector<torch::optim::OptimizerParamGroup>").pointerTypes("OptimizerParamGroupVector").define())
                .put(new Info("std::vector<torch::jit::Function*>").pointerTypes("FunctionVector").define())
                .put(new Info("std::vector<std::shared_ptr<torch::jit::Graph> >").pointerTypes("GraphVector").define())
                .put(new Info("std::vector<std::shared_ptr<torch::jit::Operator> >").pointerTypes("OperatorVector").define())
@@ -785,14 +1920,23 @@ public class torch implements LoadEnabled, InfoMapper {
                              "std::tuple<at::Tensor&,at::Tensor&,at::Tensor&,at::Tensor&>").cast().pointerTypes("PointerPointer<Tensor>"))
                .put(new Info("std::tuple<std::string,size_t,size_t>").pointerTypes("StringSizeTSizeTTuple").define())
                .put(new Info("torch::OrderedDict<std::string,at::Tensor>", "torch::OrderedDict<std::string,torch::Tensor>").pointerTypes("StringTensorDict").define())
-               .put(new Info("torch::OrderedDict<std::string,at::Tensor>::Iterator").pointerTypes("StringTensorDict.Iterator"))
+               .put(new Info("torch::OrderedDict<Key,Value>::Item<std::string,at::Tensor>", "torch::OrderedDict<std::string,at::Tensor>::Item",
+                             "std::vector<torch::OrderedDict<std::string,at::Tensor>::Item>::iterator").pointerTypes("StringTensorDictItem"))
                .put(new Info("torch::OrderedDict<std::string,torch::nn::Module>").pointerTypes("StringModuleDict").define())
+               .put(new Info("torch::OrderedDict<Key,Value>::Item<std::string,torch::nn::Module>", "torch::OrderedDict<std::string,torch::nn::Module>::Item",
+                             "std::vector<torch::OrderedDict<std::string,torch::nn::Module>::Item>::iterator").pointerTypes("StringModuleDictItem"))
                .put(new Info("torch::OrderedDict<std::string,torch::nn::AnyModule>")
                        .valueTypes("@Cast({\"\", \"torch::OrderedDict<std::string,torch::nn::AnyModule>&&\"}) @StdMove StringAnyModuleDict").pointerTypes("StringAnyModuleDict").define())
+               .put(new Info("torch::OrderedDict<Key,Value>::Item<std::string,torch::nn::AnyModule>", "torch::OrderedDict<std::string,torch::nn::AnyModule>::Item",
+                             "std::vector<torch::OrderedDict<std::string,torch::nn::AnyModule>::Item>::iterator").pointerTypes("StringAnyModuleDictItem"))
                .put(new Info("torch::OrderedDict<std::string,std::shared_ptr<torch::nn::Module> >").pointerTypes("StringSharedModuleDict").define())
-               .put(new Info("torch::OrderedDict<std::string,std::shared_ptr<torch::nn::Module> >::Iterator").pointerTypes("StringSharedModuleDict.Iterator"))
-               .put(new Info("std::pair<std::string,torch::Tensor>", "torch::OrderedDict<std::string,torch::Tensor>::Item",
+               .put(new Info("torch::OrderedDict<Key,Value>::Item<std::string,std::shared_ptr<torch::nn::Module> >", "torch::OrderedDict<std::string,std::shared_ptr<torch::nn::Module> >::Item",
+                             "std::vector<torch::OrderedDict<std::string,std::shared_ptr<torch::nn::Module> >::Item>::iterator").pointerTypes("StringSharedModuleDictItem"))
+               .put(new Info("std::pair<std::string,torch::Tensor>", "std::pair<std::string,at::Tensor>", "torch::OrderedDict<std::string,torch::Tensor>::Item",
                              "std::vector<torch::OrderedDict<std::string,torch::Tensor>::Item>::iterator").cast().pointerTypes("StringTensorPair").define())
+               .put(new Info("std::pair<std::string,torch::nn::Module>").pointerTypes("StringModulePair").define())
+               .put(new Info("std::pair<std::string,torch::nn::AnyModule>").pointerTypes("StringAnyModulePair").define())
+               .put(new Info("std::pair<std::string,std::shared_ptr<torch::nn::Module> >").pointerTypes("StringSharedModulePair").define())
                .put(new Info("std::vector<torch::nn::Module>").pointerTypes("ModuleVector").define())
                .put(new Info("std::vector<torch::nn::Module>::iterator").pointerTypes("ModuleVector.Iterator"))
                .put(new Info("std::vector<torch::nn::AnyModule>").pointerTypes("AnyModuleVector").define())
@@ -801,13 +1945,18 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("std::vector<std::shared_ptr<torch::nn::Module> >::iterator").pointerTypes("SharedModuleVector.Iterator"))
                .put(new Info("std::vector<std::shared_ptr<torch::nn::AnyModule> >").pointerTypes("SharedAnyModuleVector").define())
                .put(new Info("std::vector<std::shared_ptr<torch::nn::AnyModule> >::iterator").pointerTypes("SharedAnyModuleVector.Iterator"))
+               .put(new Info("std::vector<std::pair<std::string,at::Tensor> >").pointerTypes("StringTensorPairVector").define())
+               .put(new Info("std::vector<std::pair<std::string,torch::nn::Module> >").pointerTypes("StringModulePairVector").define())
+               .put(new Info("std::vector<std::pair<std::string,torch::nn::AnyModule> >").pointerTypes("StringAnyModulePairVector").define())
                .put(new Info("std::vector<std::pair<std::string,std::shared_ptr<torch::nn::Module> > >").pointerTypes("StringSharedModulePairVector").define())
+               .put(new Info("std::vector<std::pair<torch::jit::FusionBehavior,size_t> >", "torch::jit::FusionStrategy").pointerTypes("FusionStrategy").define())
 
                .put(new Info("C10_EXPORT", "C10_HIDDEN", "C10_IMPORT", "C10_API", "C10_API_ENUM", "EXPORT_IF_NOT_GCC",
                              "TORCH_API", "TORCH_CUDA_CU_API", "TORCH_CUDA_CPP_API", "TORCH_HIP_API", "TORCH_PYTHON_API",
-                             "__ubsan_ignore_float_divide_by_zero__", "__ubsan_ignore_undefined__", "__ubsan_ignore_signed_int_overflow__",
-                             "C10_UID", "C10_NODISCARD", "C10_UNUSED", "C10_RESTRICT", "C10_NOINLINE", "C10_ALWAYS_INLINE", "C10_FALLTHROUGH",
-                             "C10_HOST_DEVICE", "C10_DEVICE", "C10_HOST", "C10_LAUNCH_BOUNDS_0", "C10_HIP_HOST_DEVICE",
+                             "__ubsan_ignore_float_divide_by_zero__", "__ubsan_ignore_undefined__", "__ubsan_ignore_signed_int_overflow__", "__ubsan_ignore_function__",
+                             "C10_CLANG_DIAGNOSTIC_IGNORE", "C10_CLANG_DIAGNOSTIC_PUSH", "C10_CLANG_DIAGNOSTIC_POP", "C10_ATTR_VISIBILITY_HIDDEN", "C10_ERASE",
+                             "C10_UID", "C10_NODISCARD", "C10_UNUSED", "C10_USED", "C10_RESTRICT", "C10_NOINLINE", "C10_ALWAYS_INLINE", "C10_FALLTHROUGH",
+                             "C10_HOST_DEVICE", "C10_DEVICE", "C10_HOST", "C10_LAUNCH_BOUNDS_0", "C10_HIP_HOST_DEVICE", "C10_WARP_SIZE",
                              "C10_HOST_CONSTEXPR", "CONSTEXPR_EXCEPT_WIN_CUDA", "C10_HOST_CONSTEXPR_EXCEPT_WIN_CUDA",
                              "alignas", "COMPLEX_INTEGER_OP_TEMPLATE_CONDITION", "C10_DEVICE_HOST_FUNCTION", "FORCE_INLINE_APPLE",
                              "ERROR_UNSUPPORTED_CAST", "LEGACY_CONTIGUOUS_MEMORY_FORMAT", "GFLAGS_DLL_DEFINE_FLAG", "GFLAGS_DLL_DECLARE_FLAG",
@@ -820,7 +1969,9 @@ public class torch implements LoadEnabled, InfoMapper {
                              "defined(__APPLE__)",
                              "defined(__HIP_PLATFORM_HCC__)",
                              "defined(_MSC_VER)", "_WIN32",
-                             "defined(CUDA_VERSION) && CUDA_VERSION >= 11000").define(false))
+                             "defined(USE_ROCM)",
+                             "defined(CUDA_VERSION) && CUDA_VERSION >= 11000",
+                             "defined ENABLE_RECORD_KERNEL_FUNCTION_DTYPE").define(false))
 
                .put(new Info("C10_DEFINE_DEPRECATED_USING").cppText("#define C10_DEFINE_DEPRECATED_USING(TypeName, TypeThingy)").cppTypes())
                .put(new Info("C10_DEPRECATED_MESSAGE").cppText("#define C10_DEPRECATED_MESSAGE() deprecated").cppTypes())
@@ -832,31 +1983,37 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("DEFINE_SYMBOL").cppText("#define DEFINE_SYMBOL(ns, s) namespace ns { constexpr Symbol s; }").define())
                .put(new Info("TORCH_ENUM_DECLARE").cppText("#define TORCH_ENUM_DECLARE(name) namespace torch { namespace enumtype { struct k##name { k##name() {} }; } }").define())
 
-               .put(new Info("c10::Error", "c10::IndexError", "c10::ValueError", "c10::TypeError", "c10::NotImplementedError", "c10::EnforceFiniteError",
-                             "c10::OnnxfiBackendSystemError", "c10::Capsule", "c10::ClassType", "c10::EnumType", "c10::OperatorNameView", "c10::StrongTypePtr",
-                             "c10::NamedType", "torch::autograd::CppFunctionPreHook", "torch::autograd::DifferentiableViewMeta", "torch::autograd::Node",
+               .put(new Info("c10::Error", "c10::IndexError", "c10::LinAlgError", "c10::ValueError", "c10::TypeError", "c10::NotImplementedError", "c10::EnforceFiniteError",
+                             "c10::OnnxfiBackendSystemError", "c10::Capsule", "c10::ClassType", "c10::EnumType", "c10::OperatorNameView", "c10::SharedType", "c10::StrongTypePtr",
+                             "c10::WeakTypePtr", "c10::NamedType", "torch::autograd::CppFunctionPreHook", "torch::autograd::DifferentiableViewMeta", "torch::autograd::Node",
                              "torch::autograd::NodeGuard", "torch::autograd::TraceableFunction", "torch::jit::Instruction", "torch::jit::Method", "torch::jit::ModuleInstanceInfo",
-                             "torch::jit::Object::Property", "torch::jit::Operator", "torch::jit::OperatorSet", "torch::jit::SourceRangePickler", "torch::jit::Suspend").purify())
+                             "torch::jit::Object::Property", "torch::jit::Operator", "torch::jit::OperatorSet", "torch::jit::SourceRangePickler", "torch::jit::Suspend", "torch::jit::Unpickler").purify())
 
-               .put(new Info("c10::intrusive_ptr", "c10::guts::is_fundamental", "c10::operator !=", "c10::operator ==", "c10::operator <<",
-                             "c10::detail::CaptureKernelCall", "c10::detail::MultiDispatchKeySet", "c10::FunctionSchema::dump",
-                             "c10::domain_prefix", "c10::C10FlagsRegistry", "c10::enforce_detail::EnforceFailMessage",
+               .put(new Info("c10::intrusive_ptr", "c10::weak_intrusive_ptr", "c10::guts::is_fundamental", "c10::operator !=", "c10::operator ==", "c10::operator <<",
+                             "c10::detail::CaptureKernelCall", "c10::detail::MultiDispatchKeySet", "c10::ExclusivelyOwnedTraits", "c10::FunctionSchema::dump",
+                             "c10::domain_prefix", "c10::C10FlagsRegistry", "c10::enforce_detail::EnforceFailMessage", "c10::impl::build_feature_required_feature_not_available",
                              "c10::complex_literals::operator \"\"_if", "c10::complex_literals::operator \"\"_id", "c10::complex<c10::Half>",
                              "c10::InefficientStdFunctionContext", "c10::DataPtr::move_context", "QuantizerPtr", "c10::IValue::toModule",
-                             "c10::List<c10::optional<at::Tensor> >", "c10::optional<THPObjectPtr>",
+                             "c10::List<c10::optional<at::Tensor> >", "c10::optional<THPObjectPtr>", "c10::standardizeVectorForUnion",
                              "c10::impl::ExcludeDispatchKeyGuard", "c10::impl::ScalarTypeToCPPType", "c10::impl::AnnotatedKernel", "c10::impl::OperatorEntry",
                              "c10::StorageImpl(c10::StorageImpl)", "c10::StorageImpl::operator =",
                              "c10::TensorImpl(c10::TensorImpl)", "c10::TensorImpl::operator =",
                              "caffe2::Blob(caffe2::Blob)", "caffe2::Blob::operator =",
                              "torch::serialize::InputArchive(torch::serialize::InputArchive)", "torch::serialize::InputArchive::operator =",
                              "torch::serialize::OutputArchive(torch::serialize::OutputArchive)", "torch::serialize::OutputArchive::operator =",
+                             "at::_test_serialization_subcmul", "at::_test_optional_intlist", "at::_test_optional_filled_intlist",
+                             "at::_test_optional_floatlist", "at::_test_string_default", "at::_test_ambiguous_defaults",
+                             "at::TensorBase::expect_contiguous", "at::Tensor::print", "at::borrow_from_optional_tensor",
                              "at::impl::check_names_valid_for", "at::internal::launch_no_thread_state",
                              "at::checkSameNumel", "at::check_names_valid_for", "at::default_names", "at::get_device", "at::detail::scalar_fill",
                              "at::namedinference::compute_diagonal_outnames", "at::Tensor::packed_accessor", "torch::optim::serialize", "torch::none_of",
                              "torch::CountTensors", "torch::CountVariables", "torch::autograd::ExtractVariables", "torch::autograd::detail::MakeNextFunctionList",
                              "torch::autograd::VariableType::unpack", "torch::autograd::VariableType::unpack_opt", "torch::jit::parseSchemaOrName",
                              "torch::jit::trace", "torch::jit::tracer::TracingState::lookup_var_name_fn", "torch::jit::tracer::ArgumentStash",
-                             "torch::jit::constant_not_supported_error", "torch::jit::ObjectAttributeError",
+                             "torch::jit::constant_not_supported_error", "torch::jit::ObjectAttributeError", "torch::jit::utils::get_module_info",
+                             "torch::jit::operator <<(std::ostream&, torch::jit::Instruction)", "torch::jit::toString(torch::jit::OpCode)",
+                             "torch::jit::PropertyPropBase::processLoop", "torch::jit::PropertyPropBase::processIf", "torch::jit::PropertyPropBase::propagateBlock",
+                             "torch::jit::getMobileInterfaceCallExport", "torch::jit::OperatorSet::getOps", "torch::jit::SourceView::findSourceRangeThatGenerated",
 
                              "torch::jit::checkHasValidSetGetState", "torch::jit::getTypeTags", "torch::jit::setTypeTags", "torch::jit::getStorageKey",
                              "torch::jit::getUnresolvedClassAttributes", "torch::jit::isOpSupportedInMobile", "torch::jit::restoreAccurateTypeTags",
@@ -866,6 +2023,7 @@ public class torch implements LoadEnabled, InfoMapper {
                              "torch::jit::Object(c10::QualifiedName, torch::jit::CompilationUnit*, bool)", "torch::jit::Source::findSourceRangeThatGenerated",
                              "torch::jit::SourceRangeDeserializer::deserialize", "torch::jit::SourceRangePickler::pickle", "torch::jit::Pickler::pushEmptyDict",
                              "torch::jit::PrintDepsTable::add", "torch::jit::printerHasSpecialCaseFor", "ONNX_NAMESPACE::ModelProto", "torch::jit::export_onnx",
+                             "torch::jit::Function::call", "torch::jit::GraphFunction::call", "torch::jit::GraphFunction::function_creator",
                              "torch::jit::serialize_model_proto_to_string", "torch::onnx::IR_VERSION", "torch::onnx::PRODUCER_VERSION").skip())
 
                .put(new Info("c10::requires_grad", "at::range").skipDefaults())
@@ -881,12 +2039,13 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("c10::aten::clone").javaNames("_clone"))
                .put(new Info("c10::TensorOptions<c10::Device>").javaNames("TensorOptions"))
                .put(new Info("c10::detail::_str<CompileTimeEmptyString>").javaNames("_strCompileTimeEmptyString"))
-               .put(new Info("at::Tensor::data_ptr<int8_t>").javaNames("data_ptr_byte"))
-               .put(new Info("at::Tensor::data_ptr<int16_t>").javaNames("data_ptr_short"))
-               .put(new Info("at::Tensor::data_ptr<int>").javaNames("data_ptr_int"))
-               .put(new Info("at::Tensor::data_ptr<int64_t>").javaNames("data_ptr_long"))
-               .put(new Info("at::Tensor::data_ptr<float>").javaNames("data_ptr_float"))
-               .put(new Info("at::Tensor::data_ptr<double>").javaNames("data_ptr_double"))
+               .put(new Info("at::TensorBase").base("AbstractTensor").pointerTypes("TensorBase"))
+               .put(new Info("at::TensorBase::data_ptr<int8_t>").javaNames("data_ptr_byte"))
+               .put(new Info("at::TensorBase::data_ptr<int16_t>").javaNames("data_ptr_short"))
+               .put(new Info("at::TensorBase::data_ptr<int>").javaNames("data_ptr_int"))
+               .put(new Info("at::TensorBase::data_ptr<int64_t>").javaNames("data_ptr_long"))
+               .put(new Info("at::TensorBase::data_ptr<float>").javaNames("data_ptr_float"))
+               .put(new Info("at::TensorBase::data_ptr<double>").javaNames("data_ptr_double"))
                .put(new Info("at::Tensor::item<int8_t>").javaNames("item_byte"))
                .put(new Info("at::Tensor::item<int16_t>").javaNames("item_short"))
                .put(new Info("at::Tensor::item<int>").javaNames("item_int"))
@@ -936,7 +2095,7 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("c10::ArrayRef<c10::IValue>::iterator", "c10::ArrayRef<c10::IValue>::const_iterator").cast().pointerTypes("IValue"))
                .put(new Info("c10::ArrayRef<c10::EnumNameValue>", "at::ArrayRef<c10::EnumNameValue>").pointerTypes("EnumNameValueArrayRef"))
                .put(new Info("c10::ArrayRef<c10::EnumNameValue>::iterator", "c10::ArrayRef<c10::EnumNameValue>::const_iterator").cast().pointerTypes("EnumNameValue"))
-               .put(new Info("c10::ArrayRef<c10::TypePtr>", "at::ArrayRef<c10::TypePtr>").pointerTypes("TypeArrayRef"))
+               .put(new Info("c10::ArrayRef<c10::TypePtr>", "at::ArrayRef<c10::TypePtr>", "at::ArrayRef<c10::Type::TypePtr>").pointerTypes("TypeArrayRef"))
                .put(new Info("c10::ArrayRef<c10::TypePtr>::iterator", "c10::ArrayRef<c10::TypePtr>::const_iterator").cast().pointerTypes("Type"))
                .put(new Info("c10::ArrayRef<c10::Symbol>", "at::ArrayRef<c10::Symbol>").pointerTypes("SymbolArrayRef"))
                .put(new Info("c10::ArrayRef<c10::Symbol>::iterator", "c10::ArrayRef<c10::Symbol>::const_iterator").cast().pointerTypes("Symbol"))
@@ -947,6 +2106,9 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("c10::ArrayRef<at::Scalar>", "at::ArrayRef<at::Scalar>").pointerTypes("ScalarArrayRef"))
                .put(new Info("c10::ArrayRef<at::Scalar>::iterator", "c10::ArrayRef<at::Scalar>::const_iterator").cast().pointerTypes("Scalar"))
                .put(new Info("c10::ArrayRef<at::Tensor>", "at::ArrayRef<at::Tensor>", "at::TensorList").pointerTypes("TensorArrayRef"))
+               .put(new Info("c10::ArrayRef<at::Tensor>(std::vector<at::Tensor,A>&)").javaText(
+                       "public TensorArrayRef(@ByRef TensorVector Vec) { super((Pointer)null); allocate(Vec); }\n"
+                     + "private native void allocate(@ByRef TensorVector Vec);"))
                .put(new Info("c10::ArrayRef<at::Tensor>::iterator", "c10::ArrayRef<at::Tensor>::const_iterator").cast().pointerTypes("Tensor"))
                .put(new Info("c10::ArrayRef<at::TensorArg>", "at::ArrayRef<at::TensorArg>").pointerTypes("TensorArgArrayRef"))
                .put(new Info("c10::ArrayRef<at::TensorArg>::iterator", "c10::ArrayRef<at::TensorArg>::const_iterator").cast().pointerTypes("TensorArg"))
@@ -986,21 +2148,22 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("c10::DataPtr", "at::DataPtr").valueTypes("@Cast({\"\", \"c10::DataPtr&&\"}) @StdMove DataPtr").pointerTypes("DataPtr"))
                .put(new Info("c10::Storage", "at::Storage").valueTypes("@Cast({\"\", \"c10::Storage&&\"}) @StdMove Storage").pointerTypes("Storage"))
                .put(new Info("std::shared_ptr<c10::ClassType>").annotations("@SharedPtr").pointerTypes("ClassType"))
-               .put(new Info("std::shared_ptr<c10::EnumType>").annotations("@SharedPtr").pointerTypes("EnumType"))
+               .put(new Info("std::shared_ptr<c10::EnumType>", "c10::EnumTypePtr").annotations("@SharedPtr").pointerTypes("EnumType"))
                .put(new Info("std::shared_ptr<c10::NamedType>").annotations("@SharedPtr").pointerTypes("NamedType"))
                .put(new Info("std::shared_ptr<const c10::NamedType>").annotations("@SharedPtr")
                                                                      .valueTypes("@Cast({\"\", \"\", \"std::shared_ptr<c10::NamedType>&&\"}) NamedType")
                                                                      .pointerTypes("NamedType"))
-               .put(new Info("std::shared_ptr<c10::Type>", "c10::TypePtr", "at::TypePtr").annotations("@SharedPtr").pointerTypes("Type"))
+               .put(new Info("std::shared_ptr<c10::Type>").annotations("@SharedPtr").pointerTypes("Type"))
                .put(new Info("std::shared_ptr<c10::TensorType>", "c10::TensorTypePtr", "at::TensorTypePtr").annotations("@SharedPtr").pointerTypes("TensorType"))
                .put(new Info("std::unique_ptr<c10::FunctionSchema>").annotations("@UniquePtr")
                                                                     .valueTypes("@Cast({\"\", \"std::unique_ptr<c10::FunctionSchema>&&\"}) FunctionSchema")
                                                                     .pointerTypes("FunctionSchema"))
                .put(new Info("c10::IdWrapper<TypeIdentifier,c10::util::type_index>", "at::IdWrapper<TypeIdentifier,c10::util::type_index>").pointerTypes("TypeIdentifierIdWrapper"))
                .put(new Info("c10::MaybeOwned<at::Tensor>").valueTypes("@Cast({\"\", \"c10::MaybeOwned<at::Tensor>&&\"}) @StdMove TensorMaybeOwned").pointerTypes("TensorMaybeOwned"))
-               .put(new Info("c10::SmallVectorTemplateBase<int64_t,__has_trivial_copy(T)>").pointerTypes("SmallVectorBase"))
+               .put(new Info("c10::SmallVectorTemplateCommon<int64_t>").pointerTypes("Pointer"))
+               .put(new Info("c10::SmallVectorTemplateBase<int64_t>").pointerTypes("SmallVectorBase"))
                .put(new Info("c10::SmallVectorImpl<int64_t>").pointerTypes("DimVectorImpl"))
-               .put(new Info("c10::SmallVectorImpl<int64_t>::size_type").valueTypes("long"))
+               .put(new Info("c10::SmallVectorImpl<int64_t>::size_type", "c10::SmallVectorImpl<int64_t>::ValueParamT").valueTypes("long"))
                .put(new Info("c10::SmallVectorImpl<int64_t>::iterator", "c10::SmallVectorImpl<int64_t>::const_iterator").cast().pointerTypes("LongPointer"))
                .put(new Info("c10::SmallVector<int64_t,at::kDimVectorStaticSize>", "at::DimVector").pointerTypes("DimVector"))
                .put(new Info("c10::SmallVector<int64_t,at::kDimVectorStaticSize>(c10::SmallVectorImpl<int64_t>&&)",
@@ -1042,7 +2205,7 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("torch::jit::TensorsAttr::ConstructorType", "torch::jit::TensorsAttr::ValueType").cast().pointerTypes("TensorVector"))
 //               .put(new Info("torch::jit::ScalarAttributeValue<c10::TypePtr,torch::jit::AttributeKind::ty>").pointerTypes("TypeAttr"))
 //               .put(new Info("torch::jit::VectorAttributeValue<c10::TypePtr,torch::jit::AttributeKind::tys>").pointerTypes("TypesAttr"))
-               .put(new Info("torch::jit::TypeAttr::ConstructorType", "torch::jit::TypeAttr::ValueType").annotations("@SharedPtr").pointerTypes("Type"))
+               .put(new Info("torch::jit::TypeAttr::ConstructorType", "torch::jit::TypeAttr::ValueType").cast().pointerTypes("Type.TypePtr"))
                .put(new Info("torch::jit::TypesAttr::ConstructorType", "torch::jit::TypesAttr::ValueType").cast().pointerTypes("TypeVector"))
 //               .put(new Info("torch::jit::ScalarAttributeValue<at::IValue,torch::jit::AttributeKind::ival>").pointerTypes("IValueAttr"))
                .put(new Info("torch::jit::IValueAttr::ConstructorType", "torch::jit::IValueAttr::ValueType").cast().pointerTypes("IValue"))
@@ -1170,6 +2333,7 @@ public class torch implements LoadEnabled, InfoMapper {
 
                .put(new Info("torch::nn::ReflectionPadOptions<1>").pointerTypes("ReflectionPad1dOptions"))
                .put(new Info("torch::nn::ReflectionPadOptions<2>").pointerTypes("ReflectionPad2dOptions"))
+               .put(new Info("torch::nn::ReflectionPadOptions<3>").pointerTypes("ReflectionPad3dOptions"))
                .put(new Info("torch::nn::ReplicationPadOptions<1>").pointerTypes("ReplicationPad1dOptions"))
                .put(new Info("torch::nn::ReplicationPadOptions<2>").pointerTypes("ReplicationPad2dOptions"))
                .put(new Info("torch::nn::ReplicationPadOptions<3>").pointerTypes("ReplicationPad3dOptions"))
@@ -1270,9 +2434,7 @@ public class torch implements LoadEnabled, InfoMapper {
         mapModule(infoMap, "BCEWithLogitsLoss");
 
         for (int i = 1; i <= 3; i++) {
-            if (i < 3) {
-                mapModule(infoMap, "ReflectionPad" + i + "d", "torch::nn::ReflectionPadImpl<" + i + ",torch::nn::ReflectionPad" + i + "dImpl>");
-            }
+            mapModule(infoMap, "ReflectionPad" + i + "d", "torch::nn::ReflectionPadImpl<" + i + ",torch::nn::ReflectionPad" + i + "dImpl>");
             mapModule(infoMap, "ReplicationPad" + i + "d", "torch::nn::ReplicationPadImpl<" + i + ",torch::nn::ReplicationPad" + i + "dImpl>");
             mapModule(infoMap, "ConstantPad" + i + "d", "torch::nn::ConstantPadImpl<" + i + ",torch::nn::ConstantPad" + i + "dImpl>");
             if (i == 2) {
@@ -1372,9 +2534,10 @@ public class torch implements LoadEnabled, InfoMapper {
                              "std::is_same<torch::detail::pack<true>,torch::detail::pack<true> >", "at::cuda::NVRTC", "at::RecordFunctionCallback", "THCState", "THHState",
                              "torch::autograd::ViewInfo", "torch::jit::InlinedCallStackPtr", "InlinedCallStackPtr", "torch::jit::ScopePtr", "torch::detail::TensorDataContainer",
                              "std::shared_ptr<caffe2::serialize::PyTorchStreamReader>", "caffe2::serialize::PyTorchStreamWriter",
+                             "c10::impl::PyInterpreter", "std::function<at::Tensor(const at::Tensor&)>",
 
-                             "c10::optional<c10::string_view>", "c10::optional<std::chrono::milliseconds>",
-                             "c10::intrusive_ptr<c10::ivalue::Object>", "c10::ArrayRef<c10::intrusive_ptr<c10::ivalue::Object> >",
+                             "c10::optional<PyObject*>", "c10::optional<c10::string_view>", "c10::optional<std::vector<c10::string_view> >", "c10::optional<std::chrono::milliseconds>",
+                             "c10::intrusive_ptr<c10::ivalue::Object>", "c10::ArrayRef<c10::intrusive_ptr<c10::ivalue::Object> >", "c10::intrusive_ptr<c10::TensorImpl>",
                              "c10::intrusive_ptr<torch::jit::Tree>", "at::SmallVector<torch::jit::TreeRef,4>", "std::unordered_map<torch::jit::TreeRef,std::string>",
                              "torch::jit::Maybe<c10::List<torch::jit::Property> >", "torch::jit::Maybe<c10::List<torch::jit::Assign> >",
                              "c10::optional<c10::VaryingShape<int64_t>::ListOfOptionalElements>", "c10::optional<c10::VaryingShape<c10::Stride>::ListOfOptionalElements>",
@@ -1382,15 +2545,17 @@ public class torch implements LoadEnabled, InfoMapper {
                              "c10::optional<torch::nn::TripletMarginWithDistanceLossOptions::distance_function_t>",
                              "c10::optional<torch::nn::functional::TripletMarginWithDistanceLossFuncOptions::distance_function_t>",
                              "std::tuple<at::Tensor,c10::optional<std::vector<int64_t> >,c10::optional<std::vector<double> >,c10::optional<bool> >",
+                             "c10::optional<std::shared_ptr<torch::jit::CompilationUnit> >", "c10::optional<std::weak_ptr<torch::jit::CompilationUnit> >",
 
                              "std::enable_shared_from_this<c10::Type>",
+                             "std::enable_shared_from_this<c10::SharedType>",
                              "std::enable_shared_from_this<torch::autograd::ForwardGrad>",
                              "std::enable_shared_from_this<torch::autograd::Node>",
                              "std::enable_shared_from_this<torch::jit::SugaredValue>", "std::enable_shared_from_this<SugaredValue>",
                              "std::enable_shared_from_this<torch::jit::tracer::TracingState>", "std::enable_shared_from_this<TracingState>",
                              "std::enable_shared_from_this<torch::nn::Module>", "std::enable_shared_from_this<Module>").cast().pointerTypes("Pointer"))
 
-               .put(new Info("at::Tensor::toString", "at::DeprecatedTypeProperties::toString", "torch::jit::Graph::toString").javaText("public native @StdString String toString();"))
+               .put(new Info("at::Tensor::toString", "at::TensorBase::toString", "at::DeprecatedTypeProperties::toString", "torch::jit::Graph::toString").javaText("public native @StdString String toString();"))
                .put(new Info("torch::jit::tracer::pauseTracing()").javaText("@Namespace(\"torch::jit::tracer\") public static native @ByVal @Cast(\"std::function<void()>*\") Pointer pauseTracing();"))
                .put(new Info("torch::jit::ProfileOp::getCallback()", "torch::jit::ProfileIValueOp::getCallback()").javaText(
                        "public native @ByVal @Cast(\"std::function<void(std::vector<c10::IValue>&)>*\") Pointer getCallback();"))
@@ -1403,9 +2568,9 @@ public class torch implements LoadEnabled, InfoMapper {
                        "public native @ByVal Tensor step(@ByVal(nullValue = \"torch::optim::Optimizer::LossClosure(nullptr)\") LossClosure closure);\n"
                      + "public native @ByVal Tensor step();\n"))
 
-               .put(new Info("c10::DeleterFnPtr").valueTypes("Deleter"))
+               .put(new Info("c10::DeleterFnPtr").cast().valueTypes("Deleter", "Pointer", "long"))
+               .put(new Info("std::function<void(void*)>").pointerTypes("Deleter", "@Cast(\"void(*)(void*)\") Pointer", "@Cast(\"void(*)(void*)\") long"))
                .put(new Info("std::function<void()>").pointerTypes("Func"))
-               .put(new Info("std::function<void(void*)>").pointerTypes("Deleter"))
                .put(new Info("std::function<std::string(void)>").pointerTypes("Fetcher"))
                .put(new Info("std::function<void(const std::string&)>").pointerTypes("Logger"))
                .put(new Info("std::function<void(const c10::DDPLoggingData&)>",
@@ -1435,6 +2600,7 @@ public class torch implements LoadEnabled, InfoMapper {
                .put(new Info("std::function<Tensor(const Tensor&,const Tensor&)>",
                              "torch::nn::TripletMarginWithDistanceLossOptions::distance_function_t",
                              "torch::nn::functional::TripletMarginWithDistanceLossFuncOptions::distance_function_t").pointerTypes("DistanceFunction"))
+               .put(new Info("c10::TypePtr (*)(const std::string&)", "torch::jit::Unpickler::TypeParserT").pointerTypes("TypeParser").define(false))
         ;
     }
 
@@ -1634,6 +2800,15 @@ public class torch implements LoadEnabled, InfoMapper {
         protected DistanceFunction() { allocate(); }
         private native void allocate();
         public native @ByVal @Cast("at::Tensor*") Pointer call(@ByRef @Cast("const at::Tensor*") Pointer t1, @ByRef @Cast("const at::Tensor*") Pointer t2);
+    }
+
+    public static class TypeParser extends FunctionPointer {
+        static { Loader.load(); }
+        /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
+        public    TypeParser(Pointer p) { super(p); }
+        protected TypeParser() { allocate(); }
+        private native void allocate();
+        public native @ByVal @Cast("c10::TypePtr*") Pointer call(@ByRef @Cast("const std::string*") Pointer s);
     }
 
     @Namespace("std") public static native @MemberGetter @ByRef @Cast("std::istream*") Pointer cin();

@@ -61,16 +61,16 @@ import org.bytedeco.dnnl.presets.*;
 //                "onnxruntime/core/providers/rocm/rocm_provider_factory.h",
 //                "onnxruntime/core/providers/dml/dml_provider_factory.h",
             },
-            link = {"onnxruntime_providers_shared", "onnxruntime@.1.9.1"}
+            link = {"onnxruntime_providers_shared", "onnxruntime@.1.11.1"}
         ),
         @Platform(
             value = {"linux-x86_64", "macosx-x86_64", "windows-x86_64"},
-            link = {"onnxruntime_providers_shared", "onnxruntime@.1.9.1", "onnxruntime_providers_dnnl"}
+            link = {"onnxruntime_providers_shared", "onnxruntime@.1.11.1", "onnxruntime_providers_dnnl"}
         ),
         @Platform(
             value = {"linux-x86_64", "macosx-x86_64", "windows-x86_64"},
             extension = "-gpu",
-            link = {"onnxruntime_providers_shared", "onnxruntime@.1.9.1", "onnxruntime_providers_dnnl", "onnxruntime_providers_cuda"}
+            link = {"onnxruntime_providers_shared", "onnxruntime@.1.11.1", "onnxruntime_providers_dnnl", "onnxruntime_providers_cuda"}
         ),
     },
     target = "org.bytedeco.onnxruntime",
@@ -90,6 +90,9 @@ public class onnxruntime implements LoadEnabled, InfoMapper {
             return;
         }
         int i = 0;
+        if (platform.startsWith("windows")) {
+            preloads.add(i++, "zlibwapi");
+        }
         String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "curand", "cudnn",
                          "cudnn_ops_infer", "cudnn_ops_train", "cudnn_adv_infer",
                          "cudnn_adv_train", "cudnn_cnn_infer", "cudnn_cnn_train"};
@@ -142,6 +145,7 @@ public class onnxruntime implements LoadEnabled, InfoMapper {
                .put(new Info("Ort::Value::GetTensorMutableData<uint32_t>").javaNames("GetTensorMutableDataUInt"))
                .put(new Info("Ort::Value::GetTensorMutableData<uint64_t>").javaNames("GetTensorMutableDataULong"))
                .put(new Info("Ort::Value::GetTensorMutableData<bool>").javaNames("GetTensorMutableDataBool"))
+               .put(new Info("Ort::Unowned<const Ort::MemoryInfo>").pointerTypes("UnownedMemoryInfo").purify())
                .put(new Info("Ort::Unowned<Ort::TensorTypeAndShapeInfo>").pointerTypes("UnownedTensorTypeAndShapeInfo").purify())
                .put(new Info("Ort::Unowned<Ort::SequenceTypeInfo>").pointerTypes("UnownedSequenceTypeInfo").purify())
                .put(new Info("Ort::Unowned<Ort::MapTypeInfo>").pointerTypes("UnownedMapTypeInfo").purify())
@@ -165,6 +169,7 @@ public class onnxruntime implements LoadEnabled, InfoMapper {
                .put(new Info("Ort::Base<OrtMapTypeInfo>").pointerTypes("BaseMapTypeInfo"))
                .put(new Info("Ort::Base<OrtTypeInfo>").pointerTypes("BaseTypeInfo"))
                .put(new Info("Ort::Base<OrtValue>").pointerTypes("BaseValue"))
+               .put(new Info("OrtSessionOptionsAppendExecutionProvider_MIGraphX").skip())
                .put(new Info("OrtSessionOptionsAppendExecutionProvider_CUDA").annotations("@Platform(extension=\"-gpu\")").javaNames("OrtSessionOptionsAppendExecutionProvider_CUDA"));
     }
 }

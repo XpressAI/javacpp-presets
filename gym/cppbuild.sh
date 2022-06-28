@@ -7,8 +7,8 @@ if [[ -z "$PLATFORM" ]]; then
     exit
 fi
 
-GYM_VERSION=0.21.0
-download https://github.com/openai/gym/archive/v$GYM_VERSION.tar.gz gym-$GYM_VERSION.tar.gz
+GYM_VERSION=0.24.1
+download https://github.com/openai/gym/archive/$GYM_VERSION.tar.gz gym-$GYM_VERSION.tar.gz
 
 mkdir -p $PLATFORM
 cd $PLATFORM
@@ -73,7 +73,7 @@ fi
 export PYTHONPATH="$PYTHON_INSTALL_PATH:$NUMPY_PATH/python/:$SCIPY_PATH/python/"
 mkdir -p "$PYTHON_INSTALL_PATH"
 
-$PYTHON_BIN_PATH -m pip install --target=$PYTHON_LIB_PATH setuptools
+$PYTHON_BIN_PATH -m pip install --target=$PYTHON_LIB_PATH setuptools==59.1.0
 
 # setup.py install doesn't accept absolute paths on Windows
 PYTHONNOUSERSITE=1 "$PYTHON_BIN_PATH" setup.py install --prefix ..

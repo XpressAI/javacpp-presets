@@ -87,7 +87,7 @@ public class onnx implements InfoMapper {
                              "PROTOBUF_EXPORT_TEMPLATE_DEFINE", "GOOGLE_ATTRIBUTE_ALWAYS_INLINE", "GOOGLE_ATTRIBUTE_FUNC_ALIGN", "GOOGLE_ATTRIBUTE_NOINLINE",
                              "GOOGLE_PREDICT_TRUE", "GOOGLE_PREDICT_FALSE", "GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE", "GOOGLE_PROTOBUF_ATTRIBUTE_RETURNS_NONNULL",
                              "ONNX_UNUSED", "ONNX_API", "ONNXIFI_ABI", "ONNXIFI_CHECK_RESULT", "ONNXIFI_PUBLIC", "ONNX_IMPORT", "ONNX_EXPORT").cppTypes().annotations())
-               .put(new Info("GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER").define(false))
+               .put(new Info("GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER", "defined(_MSC_VER) && (_MSC_VER < 1600)").define(false))
 
                .put(new Info("PROTOBUF_DEPRECATED").cppText("#define PROTOBUF_DEPRECATED DEPRECATED").cppTypes())
                .put(new Info("PROTOBUF_DEPRECATED_ENUM").cppText("#define PROTOBUF_DEPRECATED_ENUM DEPRECATED").cppTypes())
@@ -185,7 +185,7 @@ public class onnx implements InfoMapper {
                .put(new Info("onnx::RetrieveValues<std::string>").javaNames("RetrieveValuesString"))
                .put(new Info("onnx::ParseProtoFromBytes<google::protobuf::MessageLite>").javaNames("ParseProtoFromBytes"))
 
-               .put(new Info("onnx::checker::ValidationError").purify())
+               .put(new Info("onnx::checker::ValidationError", "onnx::version_conversion::GenericAdapter").purify())
 
                .put(new Info("std::function<bool(int)>").pointerTypes("BoolIntFn"))
                .put(new Info("std::function<bool(int,int)>").pointerTypes("BoolIntIntFn"))

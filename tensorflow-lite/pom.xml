@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.bytedeco</groupId>
     <artifactId>javacpp-presets</artifactId>
-    <version>1.5.7-SNAPSHOT</version>
+    <version>1.5.8-SNAPSHOT</version>
   </parent>
 
   <groupId>org.bytedeco</groupId>
@@ -16,7 +16,7 @@
 
   <properties>
     <javacpp.packageName>tensorflowlite</javacpp.packageName>
-    <tensorflow.version>2.6.0</tensorflow.version>
+    <tensorflow.version>2.9.1</tensorflow.version>
     <tensorflow.path>${basedir}/cppbuild/${javacpp.platform}${javacpp.platform.extension}/tensorflow-${tensorflow.version}/</tensorflow.path>
   </properties>
 
@@ -59,6 +59,7 @@
           </preloadPaths>
           <compilerOptions>
             <compilerOption>@${tensorflow.path}/../build/objs</compilerOption>
+            <compilerOption>-Wl,--allow-multiple-definition</compilerOption>
           </compilerOptions>
         </configuration>
       </plugin>
@@ -83,6 +84,26 @@
 
   <profiles>
     <profile>
+      <id>mac</id>
+      <activation>
+        <os><family>mac os x</family></os>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <configuration>
+              <properties>${javacpp.platform}</properties>
+              <compilerOptions>
+                <compilerOption>@${tensorflow.path}/../build/objs</compilerOption>
+              </compilerOptions>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>msvc</id>
       <activation>
         <os><family>windows</family></os>
@@ -96,6 +117,8 @@
               <properties>${javacpp.platform}</properties>
               <compilerOptions>
                 <compilerOption>@${tensorflow.path}/../build/objs.dos</compilerOption>
+                <compilerOption>/link</compilerOption>
+                <compilerOption>/FORCE:MULTIPLE</compilerOption>
               </compilerOptions>
             </configuration>
           </plugin>

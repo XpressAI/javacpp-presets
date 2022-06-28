@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bytedeco.cpython</groupId>
     <artifactId>simple</artifactId>
-    <version>1.5.7-SNAPSHOT</version>
+    <version>1.5.8-SNAPSHOT</version>
     <properties>
         <exec.mainClass>Simple</exec.mainClass>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -12,10 +12,10 @@
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>cpython-platform</artifactId>
-            <version>3.10.0-1.5.7-SNAPSHOT</version>
+            <version>3.10.5-1.5.8-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
-        <sourceDirectory>${basedir}</sourceDirectory>
+        <sourceDirectory>.</sourceDirectory>
     </build>
 </project>

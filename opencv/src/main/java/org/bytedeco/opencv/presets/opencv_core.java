@@ -57,9 +57,9 @@ import org.bytedeco.openblas.presets.*;
             "<opencv2/core/utility.hpp>", "<opencv2/core/utils/instrumentation.hpp>", "<opencv2/core/utils/tls.hpp>",
             "<opencv2/core/types_c.h>", "<opencv2/core/core_c.h>", "<opencv2/core/types.hpp>", "<opencv2/core.hpp>",
             "<opencv2/core/cuda.hpp>", "<opencv2/core/ocl.hpp>", "<opencv2/core/operations.hpp>", "<opencv2/core/bufferpool.hpp>", "<opencv2/core/mat.hpp>",
-            "<opencv2/core/persistence.hpp>", "<opencv2/core/optim.hpp>", "<opencv2/core/async.hpp>", "opencv_adapters.h"}, link = {"opencv_core@.4.5", "opencv_imgproc@.4.5"},
+            "<opencv2/core/persistence.hpp>", "<opencv2/core/optim.hpp>", "<opencv2/core/async.hpp>", "opencv_adapters.h"}, link = {"opencv_core@.406", "opencv_imgproc@.406"},
             resource = {"include", "lib", "sdk", "share", "x86", "x64", "OpenCVConfig.cmake", "OpenCVConfig-version.cmake", "python"}, linkresource = "lib",
-            preload = {"opencv_cudev@.4.5"}, compiler = "cpp11", define = "SHARED_PTR_NAMESPACE std"),
+            preload = {"opencv_cudev@.406"}, compiler = "cpp11", define = "SHARED_PTR_NAMESPACE std"),
         @Platform(value = "android", preload = ""),
         @Platform(value = "ios", preload = {"liblibjpeg", "liblibpng", "liblibprotobuf", "liblibwebp", "libzlib", "libopencv_core"}),
         @Platform(value = "linux",        preloadpath = {"/usr/lib/", "/usr/lib32/", "/usr/lib64/"}),
@@ -68,7 +68,7 @@ import org.bytedeco.openblas.presets.*;
         @Platform(value = "linux-x86",    preloadpath = {"/usr/lib32/", "/usr/lib/"}),
         @Platform(value = "linux-x86_64", preloadpath = {"/usr/lib64/", "/usr/lib/"}),
         @Platform(value = "linux-ppc64",  preloadpath = {"/usr/lib/powerpc64-linux-gnu/", "/usr/lib/powerpc64le-linux-gnu/"}),
-        @Platform(value = "windows", define = {"SHARED_PTR_NAMESPACE std", "_WIN32_WINNT 0x0502"}, link =  {"opencv_core454", "opencv_imgproc454"}, preload = {"opencv_cudev454"}),
+        @Platform(value = "windows", define = {"SHARED_PTR_NAMESPACE std", "_WIN32_WINNT 0x0502"}, link =  {"opencv_core460", "opencv_imgproc460"}, preload = {"opencv_cudev460"}),
         @Platform(value = {"linux-arm64", "linux-ppc64le", "linux-x86_64", "macosx-x86_64", "windows-x86_64"}, extension = "-gpu")},
     target = "org.bytedeco.opencv.opencv_core",
     global = "org.bytedeco.opencv.global.opencv_core",
@@ -89,6 +89,9 @@ public class opencv_core implements LoadEnabled, InfoMapper {
             return;
         }
         int i = 0;
+        if (platform.startsWith("windows")) {
+            preloads.add(i++, "zlibwapi");
+        }
         String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "cudnn", "nppc", "nppial", "nppicc", "nppicom",
                          "nppidei", "nppif", "nppig", "nppim", "nppist", "nppisu", "nppitc", "npps",
                          "cudnn_ops_infer", "cudnn_ops_train", "cudnn_adv_infer", "cudnn_adv_train", "cudnn_cnn_infer", "cudnn_cnn_train"};
@@ -428,7 +431,7 @@ public class opencv_core implements LoadEnabled, InfoMapper {
 
     @Documented @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.METHOD, ElementType.PARAMETER})
-    @Cast({"cv::Ptr"}) @Adapter("PtrAdapter") public @interface Ptr {
+    @Cast({"cv::Ptr", "&"}) @Adapter("PtrAdapter") public @interface Ptr {
         /** @return template type */
         String value() default "";
     }
