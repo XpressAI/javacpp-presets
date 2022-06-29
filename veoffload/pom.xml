@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.bytedeco</groupId>
     <artifactId>javacpp-presets</artifactId>
-    <version>1.5.7-SNAPSHOT</version>
+    <version>1.5.8-SNAPSHOT</version>
   </parent>
 
   <groupId>org.bytedeco</groupId>
@@ -41,6 +41,9 @@
             </goals>
             <configuration>
               <copyLibs>false</copyLibs>
+              <compilerOptions>
+                <compilerOption>-fpermissive</compilerOption>
+              </compilerOptions>
             </configuration>
           </execution>
         </executions>
